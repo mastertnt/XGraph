@@ -26,6 +26,7 @@ namespace XGraphTest
             InitializeComponent();
             this.GraphView.DataContext = this.CreateTypeGraph();
             this.GraphView.SelectionChanged += GraphView_SelectionChanged;
+            this.GraphView.SelectionMode = SelectionMode.Extended;
         }
 
         void GraphView_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -114,6 +115,25 @@ namespace XGraphTest
             }
             return lNode;
 
+        }
+
+        private void Delete_Button_Click(object sender, RoutedEventArgs e)
+        {
+            GraphViewModel lRootViewModel = this.GraphView.DataContext as GraphViewModel;
+            foreach (IGraphItemViewModel lItem in this.GraphView.SelectedItems.Cast<IGraphItemViewModel>().ToList())
+            {
+                ConnectionViewModel lConnection = lItem as ConnectionViewModel;
+                if (lConnection != null)
+                {
+                    lRootViewModel.RemoveConnection(lConnection);
+                }
+
+                NodeViewModel lNode = lItem as NodeViewModel;
+                if (lNode != null)
+                {
+                    lRootViewModel.RemoveNode(lNode);
+                }
+            }
         }
     }
 }

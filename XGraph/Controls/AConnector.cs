@@ -24,7 +24,7 @@ namespace XGraph.Controls
         /// <summary>
         /// Identifies the Position dependency property.
         /// </summary>
-        public static readonly DependencyProperty PositionProperty = DependencyProperty.Register("Position", typeof(Point), typeof(AConnector), new FrameworkPropertyMetadata(new Point()));
+        public static readonly DependencyProperty PositionProperty = DependencyProperty.Register("Position", typeof(Point), typeof(AConnector), new FrameworkPropertyMetadata(new Point(), OnPositionChanged));
 
         #endregion // Dependencies.
 
@@ -70,6 +70,15 @@ namespace XGraph.Controls
 
         #endregion // Constructors.
 
+        #region Events
+
+        /// <summary>
+        /// Event raised when the position has changed.
+        /// </summary>
+        public event Action<Point, Point> PositionChanged;
+
+        #endregion // Events.
+
         #region Methods
 
         /// <summary>
@@ -83,6 +92,33 @@ namespace XGraph.Controls
             {
                 // Get centre position of this Connector relative to the DesignerCanvas.
                 this.Position = this.TransformToVisual(lParentCanvas.AdornerLayer).Transform(new Point(this.ActualWidth / 2, this.ActualHeight / 2));
+            }
+        }
+
+        /// <summary>
+        /// Delegate called when the position changed.
+        /// </summary>
+        /// <param name="pObject">The modified control.</param>
+        /// <param name="pEventArgs">The event arguments.</param>
+        private static void OnPositionChanged(DependencyObject pObject, DependencyPropertyChangedEventArgs pEventArgs)
+        {
+            AConnector lConnector = pObject as AConnector;
+            if (lConnector != null)
+            {
+                lConnector.NotifyPositionChanged((Point)pEventArgs.OldValue, (Point)pEventArgs.NewValue);
+            }
+        }
+
+        /// <summary>
+        /// Notifies the position has changed.
+        /// </summary>
+        /// <param name="pOldPos">The old position.</param>
+        /// <param name="pNewPos">The new position.</param>
+        private void NotifyPositionChanged(Point pOldPos, Point pNewPos)
+        {
+            if (this.PositionChanged != null)
+            {
+                this.PositionChanged(pOldPos, pNewPos);
             }
         }
 

@@ -8,8 +8,23 @@
         <ResourceDictionary Source="/XGraph;Component/Resources/All.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
+    <!-- GraphView template. -->
+    <ControlTemplate x:Key="GraphViewTemplate" TargetType="{x:Type controls:GraphView}">
+        <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
+            <Grid>
+                <ScrollViewer x:Name="INNER_ScrollViewer" Focusable="False" Padding="{TemplateBinding Padding}" Background="{TemplateBinding Background}" BorderBrush="Transparent" BorderThickness="0" KeyboardNavigation.TabNavigation="{TemplateBinding KeyboardNavigation.TabNavigation}">
+                    <ItemsPresenter />
+                </ScrollViewer>
+                <Canvas x:Name="PART_SelectionBoxCanvas" >
+                    <controls:SelectionBox />
+                </Canvas>
+            </Grid>
+        </Border>
+    </ControlTemplate>
+    
     <!-- GraphView style. -->
     <Style TargetType="{x:Type controls:GraphView}" BasedOn="{StaticResource {x:Type ListBox}}">
+        <Setter Property="Template" Value="{StaticResource GraphViewTemplate}" />
         <Setter Property="FontFamily" Value="{StaticResource Segoe_UI_Light_FontFamily}" />
         <Setter Property="TextOptions.TextRenderingMode" Value="ClearType" />
         <Setter Property="TextOptions.TextFormattingMode" Value="Display" />
@@ -102,12 +117,14 @@
                     <VisualState x:Name="Normal" />
                 </VisualStateGroup>
                 <VisualStateGroup x:Name="SelectionStates">
+                    <VisualStateGroup.Transitions>
+                        <VisualTransition GeneratedDuration="0:0:0.3" To="Selected"/>
+                        <VisualTransition From="Selected" GeneratedDuration="0:0:0.3"/>
+                    </VisualStateGroup.Transitions>
                     <VisualState x:Name="Unselected" />
                     <VisualState x:Name="Selected">
                         <Storyboard>
-                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="INNER_BackgroundShape" Storyboard.TargetProperty="(Shape.Stroke)">
-                                <DiscreteObjectKeyFrame KeyTime="00:00:00" Value="{StaticResource Icon_Foreground_Brush}" />
-                            </ObjectAnimationUsingKeyFrames>
+                            <DoubleAnimation Storyboard.TargetName="INNER_SelectedShape" Storyboard.TargetProperty="(UIElement.Opacity)" To="1" />
                         </Storyboard>
                     </VisualState>
                 </VisualStateGroup>
@@ -117,7 +134,8 @@
                 <RowDefinition Height="*" />
                 <RowDefinition Height="{markup:GridLength {StaticResource NodeView_Bevel_Size}}" />
             </Grid.RowDefinitions>
-            <controls:NodeViewShape x:Name="INNER_BackgroundShape" Fill="{TemplateBinding Background}" BevelLenght="{StaticResource NodeView_Bevel_Size}" StrokeDashArray="3 2" StrokeThickness="2" Grid.RowSpan="3" />
+            <controls:NodeViewShape x:Name="INNER_BackgroundShape" Fill="{TemplateBinding Background}" BevelLenght="{StaticResource NodeView_Bevel_Size}" Grid.RowSpan="3" Margin="1"/>
+            <controls:NodeViewShape x:Name="INNER_SelectedShape" Fill="Transparent" BevelLenght="{StaticResource NodeView_Bevel_Size}" Stroke="{StaticResource Selection_Border_Brush}" StrokeThickness="1" Grid.RowSpan="3" StrokeDashArray="3 2" Opacity="0.0" />
             <Grid Margin="0,0,0,3">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
@@ -288,18 +306,19 @@
                     <VisualState x:Name="Unselected" />
                     <VisualState x:Name="Selected">
                         <Storyboard>
-                            <DoubleAnimation Storyboard.TargetName="INNER_SelectionHaloUp" Storyboard.TargetProperty="(UIElement.Opacity)" To="0.2" />
-                            <DoubleAnimation Storyboard.TargetName="INNER_SelectionHaloDown" Storyboard.TargetProperty="(UIElement.Opacity)" To="0.2" />
+                            <DoubleAnimation Storyboard.TargetName="INNER_SelectionHaloUp" Storyboard.TargetProperty="(UIElement.Opacity)" To="1" />
+                            <DoubleAnimation Storyboard.TargetName="INNER_SelectionHaloDown" Storyboard.TargetProperty="(UIElement.Opacity)" To="1" />
                         </Storyboard>
                     </VisualState>
                 </VisualStateGroup>
             </VisualStateManager.VisualStateGroups>
-            <controls:ConnectionRenderer x:Name="INNER_SelectionHaloUp" From="{Binding OutputConnector.Position, RelativeSource={RelativeSource TemplatedParent}}" To="{Binding InputConnector.Position, RelativeSource={RelativeSource TemplatedParent}}" Opacity="0.0" StrokeDashArray="3 2">
+            <controls:ConnectionRenderer x:Name="INNER_Background" From="{Binding OutputConnector.Position, RelativeSource={RelativeSource TemplatedParent}}" To="{Binding InputConnector.Position, RelativeSource={RelativeSource TemplatedParent}}" Stroke="Transparent" StrokeThickness="11" />
+            <controls:ConnectionRenderer x:Name="INNER_SelectionHaloUp" From="{Binding OutputConnector.Position, RelativeSource={RelativeSource TemplatedParent}}" To="{Binding InputConnector.Position, RelativeSource={RelativeSource TemplatedParent}}" Stroke="{StaticResource Selection_Border_Brush}" Opacity="0.0" StrokeDashArray="3 2">
                 <controls:ConnectionRenderer.RenderTransform>
                     <TranslateTransform Y="2" />
                 </controls:ConnectionRenderer.RenderTransform>
             </controls:ConnectionRenderer>
-            <controls:ConnectionRenderer x:Name="INNER_SelectionHaloDown" From="{Binding OutputConnector.Position, RelativeSource={RelativeSource TemplatedParent}}" To="{Binding InputConnector.Position, RelativeSource={RelativeSource TemplatedParent}}" Opacity="0.0" StrokeDashArray="3 2">
+            <controls:ConnectionRenderer x:Name="INNER_SelectionHaloDown" From="{Binding OutputConnector.Position, RelativeSource={RelativeSource TemplatedParent}}" To="{Binding InputConnector.Position, RelativeSource={RelativeSource TemplatedParent}}" Stroke="{StaticResource Selection_Border_Brush}" Opacity="0.0" StrokeDashArray="3 2">
                 <controls:ConnectionRenderer.RenderTransform>
                     <TranslateTransform Y="-2" />
                 </controls:ConnectionRenderer.RenderTransform>
@@ -313,5 +332,21 @@
         <Setter Property="Template" Value="{StaticResource ConnectionTemplate}" />
         <Setter Property="Background" Value="{StaticResource Connection_Background_Brush}" />
     </Style>
-    
+
+    <!-- SelectionBox template. -->
+    <ControlTemplate x:Key="SelectionBoxTemplate" TargetType="{x:Type controls:SelectionBox}">
+        <Grid x:Name="INNER_MainGrid">
+            <Rectangle x:Name="INNER_Border" StrokeDashArray="3 2" StrokeThickness="{TemplateBinding BorderThickness}" Stroke="{TemplateBinding BorderBrush}" />
+            <Rectangle x:Name="INNER_Fill" Margin="{TemplateBinding BorderThickness}" Fill="{TemplateBinding Background}" Opacity="0.2"/>
+        </Grid>
+    </ControlTemplate>
+
+    <!-- SelectionBox style. -->
+    <Style TargetType="{x:Type controls:SelectionBox}">
+        <Setter Property="Template" Value="{StaticResource SelectionBoxTemplate}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="BorderBrush" Value="{StaticResource Selection_Border_Brush}" />
+        <Setter Property="Background" Value="{StaticResource Selection_Background_Brush}" />
+    </Style>
+
 </ResourceDictionary>

@@ -5,6 +5,7 @@ using System.Windows.Media;
 using PropertyChanged;
 using XGraph.Extensions;
 using XGraph.ViewModels;
+using System;
 
 namespace XGraph.Controls
 {
@@ -13,14 +14,9 @@ namespace XGraph.Controls
     /// </summary>
     /// <!-- Nicolas Baudrey -->
     [ImplementPropertyChanged]
-    public class Connection : ContentControl
+    public class Connection : AGraphItemContainer
     {
         #region Dependencies
-
-        /// <summary>
-        /// Identifies the IsSelected dependency property.
-        /// </summary>
-        public static readonly DependencyProperty IsSelectedProperty = DependencyProperty.Register("IsSelected", typeof(bool), typeof(Connection), new FrameworkPropertyMetadata(false, OnIsSelectedChanged));
 
         /// <summary>
         /// Identifies the OutputConnector dependency property.
@@ -45,31 +41,9 @@ namespace XGraph.Controls
             FrameworkElement.DefaultStyleKeyProperty.OverrideMetadata(typeof(Connection), new FrameworkPropertyMetadata(typeof(Connection)));
         }
 
-        /// <summary>
-        /// Default constructor.
-        /// </summary>
-        public Connection()
-        {
-        }
-
         #endregion // Constructors.
 
         #region Properties
-
-        /// <summary>
-        /// Gets or sets the selection state of the connection.
-        /// </summary>
-        public bool IsSelected
-        {
-            get
-            {
-                return (bool)this.GetValue(IsSelectedProperty);
-            }
-            set
-            {
-                this.SetValue(IsSelectedProperty, value);
-            }
-        }
 
         /// <summary>
         /// Gets or sets the output connector of the connection.
@@ -98,6 +72,25 @@ namespace XGraph.Controls
             set
             {
                 this.SetValue(InputConnectorProperty, value);
+            }
+        }
+
+        /// <summary>
+        /// Gets the bounding box of this container.
+        /// </summary>
+        public override Rect BoundingBox
+        {
+            get
+            {
+                Point lP1 = this.OutputConnector.Position;
+                Point lP2 = this.InputConnector.Position;
+
+                double lX = Math.Min(lP1.X, lP2.X);
+                double lY = Math.Min(lP1.Y, lP2.Y);
+                double lWidth = Math.Abs(lP1.X - lP2.X);
+                double lHeight = Math.Abs(lP1.Y - lP2.Y);
+
+                return new Rect(lX, lY, lWidth, lHeight);
             }
         }
 
@@ -149,35 +142,6 @@ namespace XGraph.Controls
                         }
                     }
                 }
-            }
-        }
-
-        /// <summary>
-        /// Delegate called when the selection state changed.
-        /// </summary>
-        /// <param name="pObject">The modified control.</param>
-        /// <param name="pEventArgs">The event arguments.</param>
-        private static void OnIsSelectedChanged(DependencyObject pObject, DependencyPropertyChangedEventArgs pEventArgs)
-        {
-            Connection lConnection = pObject as Connection;
-            if (lConnection != null)
-            {
-                lConnection.UpdateVisualState();
-            }
-        }
-
-        /// <summary>
-        /// Updates the visual state of the node.
-        /// </summary>
-        private void UpdateVisualState()
-        {
-            if (this.IsSelected)
-            {
-                VisualStateManager.GoToState(this, "Selected", true);
-            }
-            else
-            {
-                VisualStateManager.GoToState(this, "Unselected", true);
             }
         }
 

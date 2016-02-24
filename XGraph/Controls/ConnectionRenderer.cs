@@ -137,25 +137,6 @@ namespace XGraph.Controls
             }
         }
 
-        ///// <summary>
-        ///// This method updates the final geometry for the path.
-        ///// </summary>
-        ///// <returns>The path geometry.</returns>
-        //private void UpdatePathGeometry()
-        //{
-        //    if (this.mDrawingGeometry == null)
-        //    {
-        //        this.mDrawingGeometry = new PathGeometry();
-        //    }
-
-        //    List<Point> lPoints = this.From.GetShortestPath(this.To);
-        //    this.mDrawingGeometry.Figures.Clear();
-        //    PathFigure lFigure = new PathFigure { StartPoint = this.From };
-        //    lPoints.RemoveAt(0);
-        //    lFigure.Segments.Add(new BezierSegment(lPoints[0], lPoints[1], lPoints[2], true));
-        //    this.mDrawingGeometry.Figures.Add(lFigure);
-        //}
-
         #endregion // Methods.
     }
 }

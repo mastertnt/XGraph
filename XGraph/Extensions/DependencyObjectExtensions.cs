@@ -5,7 +5,7 @@ using System.Windows.Media;
 namespace XGraph.Extensions
 {
     /// <summary>
-    /// Class extanding the <see cref="DependencyObject"/> class.
+    /// Class extending the <see cref="DependencyObject"/> class.
     /// </summary>
     public static class DependencyObjectExtensions
     {

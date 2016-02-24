@@ -52,7 +52,7 @@ namespace XGraph.Controls
         /// <summary>
         /// Gets or sets the specific view representing the item.
         /// </summary>
-        public FrameworkElement TemplateControl
+        public AGraphItemContainer TemplateControl
         {
             get;
             protected set;
@@ -135,7 +135,7 @@ namespace XGraph.Controls
             base.OnApplyTemplate();
 
             // Getting the parts of the control.
-            this.TemplateControl = this.GetTemplateChild(PART_TEMPLATE_CONTROL) as FrameworkElement;
+            this.TemplateControl = this.GetTemplateChild(PART_TEMPLATE_CONTROL) as AGraphItemContainer;
 
             if (this.TemplateControl == null)
             {

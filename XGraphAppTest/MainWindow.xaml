@@ -4,6 +4,13 @@
         xmlns:controls="clr-namespace:XGraph.Controls;assembly=XGraph"
         Title="MainWindow" Height="500" Width="600" WindowState="Maximized">
     <Grid>
-        <controls:GraphView x:Name="GraphView" ItemsSource="{Binding Items}" />
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <StackPanel Orientation="Horizontal" Margin="3">
+            <Button Content="Delete" Click="Delete_Button_Click" />
+        </StackPanel>
+        <controls:GraphView x:Name="GraphView" ItemsSource="{Binding Items}" Grid.Row="1" />
     </Grid>
 </Window>

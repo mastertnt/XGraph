@@ -59,9 +59,11 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Behaviors\BoxSelectionBehavior.cs" />
     <Compile Include="Controls\AdornerLayeredCanvas.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Controls\AGraphItemContainer.cs" />
     <Compile Include="Controls\ConnectionRenderer.cs" />
     <Compile Include="Controls\ConnectorsAdorner.cs">
       <SubType>Code</SubType>
@@ -81,7 +83,9 @@
     <Compile Include="Controls\PortContainerPanel.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Controls\SelectionBox.cs" />
     <Compile Include="Converters\PortDirectionToHorizontalAlignmentConverter.cs" />
+    <Compile Include="Extensions\FrameworkElementExtensions.cs" />
     <Compile Include="Extensions\Markup\GridLengthExtension.cs">
       <SubType>Code</SubType>
     </Compile>

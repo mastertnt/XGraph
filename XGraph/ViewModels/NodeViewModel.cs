@@ -32,7 +32,7 @@ namespace XGraph.ViewModels
         /// <summary>
         /// Gets or sets the x.
         /// </summary>
-        public virtual double X
+        public double X
         {
             get;
             set;
@@ -41,7 +41,7 @@ namespace XGraph.ViewModels
         /// <summary>
         /// Gets or sets the y position of the node.
         /// </summary>
-        public virtual double Y
+        public double Y
         {
             get;
             set;

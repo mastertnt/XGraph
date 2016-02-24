@@ -134,6 +134,34 @@ namespace XGraph.ViewModels
         }
 
         /// <summary>
+        /// Removes a connection from the view model.
+        /// </summary>
+        /// <param name="pNode">The node to remove.</param>
+        public void RemoveNode(NodeViewModel pNode)
+        {
+            this.mNodes.Remove(pNode);
+            this.mGraphItems.Remove(pNode);
+            if (this.NodeRemoved != null)
+            {
+                this.NodeRemoved(this, pNode);
+            }
+        }
+
+        /// <summary>
+        /// Removes a connection from the view model.
+        /// </summary>
+        /// <param name="pConnection">The connection to remove.</param>
+        public void RemoveConnection(ConnectionViewModel pConnection)
+        {
+            this.mConnections.Remove(pConnection);
+            this.mGraphItems.Remove(pConnection);
+            if (this.ConnectionRemoved != null)
+            {
+                this.ConnectionRemoved(this, pConnection);
+            }
+        }
+
+        /// <summary>
         /// Adds a connection to view model.
         /// </summary>
         /// <param name="pNode">The node to add.</param>
