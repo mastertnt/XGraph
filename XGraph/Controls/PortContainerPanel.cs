@@ -68,28 +68,31 @@ namespace XGraph.Controls
             int lInputPortsCount = 0;
             int lOutputPortsCount = 0;
 
-            // Both ports column can have columns of different sizes depending on the data template.
-            double lInputPortsWidth = this.Children.Cast<PortView>().Where(pPort => pPort.Direction == PortDirection.Input).Max(pPort => pPort.DesiredSize.Width);
-            lInputPortsWidth = Math.Round(lInputPortsWidth);
-            double lOutputPortsWidth = this.Children.Cast<PortView>().Where(pPort => pPort.Direction == PortDirection.Output).Max(pPort => pPort.DesiredSize.Width);
-            lOutputPortsWidth = Math.Round(lOutputPortsWidth);
-
-            for (int i = 0, lCount = this.Children.Count; i < lCount; ++i)
+            if (this.Children.Count > 0)
             {
-                PortView lPort = this.Children[i] as PortView;
-                if (lPort != null)
+                // Both ports column can have columns of different sizes depending on the data template.
+                double lInputPortsWidth = this.Children.Cast<PortView>().Where(pPort => pPort.Direction == PortDirection.Input).Max(pPort => pPort.DesiredSize.Width);
+                lInputPortsWidth = Math.Round(lInputPortsWidth);
+                double lOutputPortsWidth = this.Children.Cast<PortView>().Where(pPort => pPort.Direction == PortDirection.Output).Max(pPort => pPort.DesiredSize.Width);
+                lOutputPortsWidth = Math.Round(lOutputPortsWidth);
+
+                for (int i = 0, lCount = this.Children.Count; i < lCount; ++i)
                 {
-                    if (lPort.Direction == PortDirection.Input)
+                    PortView lPort = this.Children[i] as PortView;
+                    if (lPort != null)
                     {
-                        // Input ports are in the first column.
-                        lPort.Arrange(new Rect(0.0, lInputPortsCount * lPort.DesiredSize.Height, lInputPortsWidth, lPort.DesiredSize.Height));
-                        lInputPortsCount++;
-                    }
-                    else
-                    {
-                        // Output ports are in the second column.
-                        lPort.Arrange(new Rect(lInputPortsWidth, lOutputPortsCount * lPort.DesiredSize.Height, lOutputPortsWidth, lPort.DesiredSize.Height));
-                        lOutputPortsCount++;
+                        if (lPort.Direction == PortDirection.Input)
+                        {
+                            // Input ports are in the first column.
+                            lPort.Arrange(new Rect(0.0, lInputPortsCount * lPort.DesiredSize.Height, lInputPortsWidth, lPort.DesiredSize.Height));
+                            lInputPortsCount++;
+                        }
+                        else
+                        {
+                            // Output ports are in the second column.
+                            lPort.Arrange(new Rect(lInputPortsWidth, lOutputPortsCount * lPort.DesiredSize.Height, lOutputPortsWidth, lPort.DesiredSize.Height));
+                            lOutputPortsCount++;
+                        }
                     }
                 }
             }

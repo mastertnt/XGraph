@@ -47,6 +47,10 @@ namespace XGraphTest
             NodeViewModel lNode1 = new TypeNodeViewModel(typeof(SampleClass1));
             lGraph.AddNode(lNode1);
 
+            NodeViewModel lNode2 = new NodeViewModel();
+            lNode2.DisplayString = "Empty node";
+            lGraph.AddNode(lNode2);
+
             int i = 0;
             foreach (NodeViewModel lNode in lGraph.Nodes)
             {
