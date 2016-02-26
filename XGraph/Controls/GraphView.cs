@@ -39,6 +39,7 @@ namespace XGraph.Controls
         static GraphView()
         {
             FrameworkElement.DefaultStyleKeyProperty.OverrideMetadata(typeof(GraphView), new FrameworkPropertyMetadata(typeof(GraphView)));
+            ListBox.SelectionModeProperty.OverrideMetadata(typeof(GraphView), new FrameworkPropertyMetadata(SelectionMode.Extended));
         }
 
         #endregion // Constructors.
