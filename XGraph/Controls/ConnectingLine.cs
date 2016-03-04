@@ -131,7 +131,7 @@ namespace XGraph.Controls
                     {
                         PortViewModel lTargetViewModel = lTargetConnector.ParentPort.Content as PortViewModel;
                         PortViewModel lSourceViewModel = this.mSourceConnector.ParentPort.Content as PortViewModel;
-                        if (lTargetViewModel != null && lTargetViewModel.CanBeConnectedTo(lSourceViewModel))
+                        if (lTargetViewModel != null && lSourceViewModel.CanBeConnectedTo(lTargetViewModel))
                         {
                             ConnectionViewModel lConnectionViewModel = new ConnectionViewModel();
                             lConnectionViewModel.Output= lSourceViewModel;

@@ -168,11 +168,11 @@ namespace XGraph.ViewModels
         #region Methods
 
         /// <summary>
-        /// Determines whether this instance [can be connected to] the specified p port view model.
+        /// Determines whether this source port can be connected to the specified p port view model.
         /// </summary>
-        /// <param name="pPortViewModel">The p port view model.</param>
-        /// <returns></returns>
-        public bool CanBeConnectedTo(PortViewModel pPortViewModel)
+        /// <param name="pTargetPortViewModel">The target port view model.</param>
+        /// <returns>True if the connection can be done, false otherwise.</returns>
+        public virtual bool CanBeConnectedTo(PortViewModel pTargetPortViewModel)
         {
             return true;
         }
