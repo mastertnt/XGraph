@@ -126,10 +126,10 @@ namespace XGraph.Controls
             }
 
             // The content of the ParentPort is the PortViewModel.
-            Binding lPositionBinding = new Binding("Position");
-            lPositionBinding.Source = this.Content;
-            lPositionBinding.Mode = BindingMode.OneWayToSource;
-            this.Connector.SetBinding(AConnector.PositionProperty, lPositionBinding);
+            //Binding lPositionBinding = new Binding("Position");
+            //lPositionBinding.Source = this.Content;
+            //lPositionBinding.Mode = BindingMode.OneWayToSource;
+            //this.Connector.SetBinding(AConnector.PositionProperty, lPositionBinding);
         }
         
         #endregion // Methods.

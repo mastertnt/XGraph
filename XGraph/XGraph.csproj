@@ -81,9 +81,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Controls\OutputConnector.cs" />
-    <Compile Include="Controls\PortContainerPanel.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="Controls\PortContainerPanel.cs" />
     <Compile Include="Controls\SelectionBox.cs" />
     <Compile Include="Converters\PortDirectionToHorizontalAlignmentConverter.cs" />
     <Compile Include="Extensions\FrameworkElementExtensions.cs" />

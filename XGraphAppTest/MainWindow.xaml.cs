@@ -44,7 +44,7 @@ namespace XGraphTest
             NodeViewModel lNode0 = new TypeNodeViewModel(typeof(SampleClass));
             lGraph.AddNode(lNode0);
 
-            NodeViewModel lNode1 = new TypeNodeViewModel(typeof(SampleClass1));
+            NodeViewModel lNode1 = new TypeNodeViewModel(typeof(SampleClass1VeryTooMuchLong));
             lGraph.AddNode(lNode1);
 
             NodeViewModel lNode2 = new NodeViewModel();

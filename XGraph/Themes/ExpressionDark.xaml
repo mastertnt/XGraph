@@ -12,7 +12,7 @@
     <ControlTemplate x:Key="GraphViewTemplate" TargetType="{x:Type controls:GraphView}">
         <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
             <Grid>
-                <ScrollViewer x:Name="INNER_ScrollViewer" Focusable="False" Padding="{TemplateBinding Padding}" Background="{TemplateBinding Background}" BorderBrush="Transparent" BorderThickness="0" KeyboardNavigation.TabNavigation="{TemplateBinding KeyboardNavigation.TabNavigation}">
+                <ScrollViewer x:Name="INNER_ScrollViewer" Focusable="False" Padding="{TemplateBinding Padding}" Background="{TemplateBinding Background}" BorderBrush="Transparent" BorderThickness="0" KeyboardNavigation.TabNavigation="{TemplateBinding KeyboardNavigation.TabNavigation}" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
                     <ItemsPresenter />
                 </ScrollViewer>
                 <Canvas x:Name="PART_SelectionBoxCanvas" >
@@ -31,7 +31,7 @@
         <Setter Property ="ItemsPanel">
             <Setter.Value>
                 <ItemsPanelTemplate>
-                    <controls:AdornerLayeredCanvas x:Name="INNER_DrawingArea" IsItemsHost="True" Background="{StaticResource GraphView_Background_Brush}"/>
+                    <controls:AdornerLayeredCanvas x:Name="INNER_DrawingArea" Background="{StaticResource GraphView_Background_Brush}"/>
                 </ItemsPanelTemplate>
             </Setter.Value>
         </Setter>
@@ -162,17 +162,16 @@
             <TextBlock Text="{Binding Description}" Margin="0,0,6,0" HorizontalAlignment="Right" FontSize="12" />
         </StackPanel>
     </DataTemplate>
-    
-    <!-- PortContainer style. -->
+
+    <!-- PortContainer template. -->
+    <ControlTemplate x:Key="PortContainerTemplate" TargetType="{x:Type controls:PortContainer}">
+        <controls:PortContainerPanel IsItemsHost="True" />
+    </ControlTemplate>
+
+        <!-- PortContainer style. -->
     <Style TargetType="{x:Type controls:PortContainer}" BasedOn="{StaticResource {x:Type ItemsControl}}">
+        <Setter Property="Template" Value="{StaticResource PortContainerTemplate}" />
         <Setter Property ="Margin" Value="5" />
-        <Setter Property ="ItemsPanel">
-            <Setter.Value>
-                <ItemsPanelTemplate>
-                    <controls:PortContainerPanel IsItemsHost="True" />
-                </ItemsPanelTemplate>
-            </Setter.Value>
-        </Setter>
     </Style>
 
     <!-- PortView template. -->

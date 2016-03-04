@@ -5,7 +5,7 @@ using System.Text;
 
 namespace XGraphTestApp
 {
-    class SampleClass1
+    class SampleClass1VeryTooMuchLong
     {
         public int OutputPortAsInt { get { return 0; } }
 

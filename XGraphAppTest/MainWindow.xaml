@@ -8,7 +8,7 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <StackPanel Orientation="Horizontal" Margin="3">
+        <StackPanel Orientation="Horizontal" Margin="3" Visibility="Collapsed">
             <Button Content="Delete" Click="Delete_Button_Click" />
         </StackPanel>
         <controls:GraphView x:Name="GraphView" ItemsSource="{Binding Items}" Grid.Row="1" />

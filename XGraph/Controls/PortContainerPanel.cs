@@ -13,8 +13,22 @@ namespace XGraph.Controls
     /// </summary>
     /// <remarks>Left column contains the input ports, right column contains the output ports.</remarks>
     /// <!-- Damien Porte -->
-    public class PortContainerPanel : Panel
+    public class PortContainerPanel : Grid
     {
+        #region Constructors
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PortContainerPanel"/> class.
+        /// </summary>
+        public PortContainerPanel()
+        {
+            // Setting two columns to the panel so that the width computed for each port view in the base.ArrangeOverride() method is coherent.
+            this.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(1, GridUnitType.Star) });
+            this.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(1, GridUnitType.Star) });
+        }
+
+        #endregion // Constructors.
+
         #region Methods
 
         /// <summary>
@@ -24,13 +38,15 @@ namespace XGraph.Controls
         /// <returns>The viewport desired size.</returns>
         protected override Size MeasureOverride(Size pAvailableSize)
         {
+            Size lColumnSize = base.MeasureOverride(pAvailableSize);
+
             Size lInputPortsSize = new Size();
             Size lOutputPortsSize = new Size();
 
             // Iterating threw the ports to have the highest column.
-            for (int i = 0, count = this.Children.Count; i < count; ++i)
+            for (int i = 0, count = this.InternalChildren.Count; i < count; ++i)
             {
-                PortView lPort = this.Children[i] as PortView;
+                PortView lPort = this.InternalChildren[i] as PortView;
                 if (lPort != null)
                 {
                     lPort.Measure(pAvailableSize);
@@ -38,12 +54,12 @@ namespace XGraph.Controls
                     if (lPort.Direction == PortDirection.Input)
                     {
                         lInputPortsSize.Height += lPort.DesiredSize.Height;
-                        lInputPortsSize.Width = Math.Max(lInputPortsSize.Width, lPort.DesiredSize.Width);
+                        lInputPortsSize.Width = Math.Max(lInputPortsSize.Width, lColumnSize.Width);
                     }
                     else
                     {
                         lOutputPortsSize.Height += lPort.DesiredSize.Height;
-                        lOutputPortsSize.Width = Math.Max(lOutputPortsSize.Width, lPort.DesiredSize.Width);
+                        lOutputPortsSize.Width = Math.Max(lOutputPortsSize.Width, lColumnSize.Width);
                     }
                 }
             }
@@ -55,6 +71,7 @@ namespace XGraph.Controls
                 Width = lInputPortsSize.Width + lOutputPortsSize.Width
             };
 
+            // This is the minimum size the control must have.
             return lAvailableSize;
         }
 
@@ -65,20 +82,23 @@ namespace XGraph.Controls
         /// <returns>The size used (here equals to the available size).</returns>
         protected override Size ArrangeOverride(Size pFinalSize)
         {
+            // (1) Calling this base method is the key for the width of each port view to be well computed !!!
+            base.ArrangeOverride(pFinalSize);
+
             int lInputPortsCount = 0;
             int lOutputPortsCount = 0;
 
-            if (this.Children.Count > 0)
+            if (this.InternalChildren.Count > 0)
             {
-                // Both ports column can have columns of different sizes depending on the data template.
-                double lInputPortsWidth = this.Children.Cast<PortView>().Where(pPort => pPort.Direction == PortDirection.Input).Max(pPort => pPort.DesiredSize.Width);
+                // Using the ActualWidth computed by the base arrange (1) method to have the goog column width.
+                double lInputPortsWidth = this.InternalChildren.Cast<PortView>().Where(pPort => pPort.Direction == PortDirection.Input).Max(pPort => pPort.ActualWidth);
                 lInputPortsWidth = Math.Round(lInputPortsWidth);
-                double lOutputPortsWidth = this.Children.Cast<PortView>().Where(pPort => pPort.Direction == PortDirection.Output).Max(pPort => pPort.DesiredSize.Width);
+                double lOutputPortsWidth = this.InternalChildren.Cast<PortView>().Where(pPort => pPort.Direction == PortDirection.Output).Max(pPort => pPort.ActualWidth);
                 lOutputPortsWidth = Math.Round(lOutputPortsWidth);
 
-                for (int i = 0, lCount = this.Children.Count; i < lCount; ++i)
+                for (int i = 0, lCount = this.InternalChildren.Count; i < lCount; ++i)
                 {
-                    PortView lPort = this.Children[i] as PortView;
+                    PortView lPort = this.InternalChildren[i] as PortView;
                     if (lPort != null)
                     {
                         if (lPort.Direction == PortDirection.Input)
