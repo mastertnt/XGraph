@@ -163,7 +163,6 @@ namespace XGraph.Controls
             return pFinalSize;
         }
 
-
         /// <summary>
         /// Returns the indexed visual child.
         /// </summary>

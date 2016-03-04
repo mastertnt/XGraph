@@ -14,15 +14,6 @@ namespace XGraph.Controls
     /// </summary>
     public class ConnectionRenderer : Shape
     {
-        #region Fields
-
-        /// <summary>
-        /// This field stores the geometry to draw.
-        /// </summary>
-        private PathGeometry mDrawingGeometry;
-
-        #endregion // Fields.
-
         #region Dependencies
 
         /// <summary>
@@ -59,8 +50,6 @@ namespace XGraph.Controls
         /// </summary>
         public ConnectionRenderer()
         {
-            // Creating the geometry.
-            this.mDrawingGeometry = new PathGeometry();
         }
 
         #endregion // Constructors.

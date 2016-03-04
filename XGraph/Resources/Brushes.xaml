@@ -12,6 +12,8 @@
 
     <SolidColorBrush x:Key="Connection_Background_Brush" Color="#FF9D9D9D" />
 
+    <SolidColorBrush x:Key="ConnectingLine_Background_Brush" Color="#FFC4C4C4" />
+
     <SolidColorBrush x:Key="Selection_Border_Brush" Color="White" />
     <SolidColorBrush x:Key="Selection_Background_Brush" Color="White" />
 

@@ -332,6 +332,17 @@
         <Setter Property="Template" Value="{StaticResource ConnectionTemplate}" />
         <Setter Property="Background" Value="{StaticResource Connection_Background_Brush}" />
     </Style>
+    
+    <!-- Connecting line template. -->
+    <ControlTemplate x:Key="ConnectingLineTemplate" TargetType="{x:Type controls:ConnectingLine}">
+        <controls:ConnectionRenderer x:Name="INNER_Line" From="{Binding From, RelativeSource={RelativeSource TemplatedParent}}" To="{Binding To, RelativeSource={RelativeSource TemplatedParent}}" Stroke="{TemplateBinding Background}" StrokeDashArray="3 2" />
+    </ControlTemplate>
+
+    <!-- Connecting line style. -->
+    <Style TargetType="{x:Type controls:ConnectingLine}">
+        <Setter Property="Template" Value="{StaticResource ConnectingLineTemplate}" />
+        <Setter Property="Background" Value="{StaticResource ConnectingLine_Background_Brush}" />
+    </Style>
 
     <!-- SelectionBox template. -->
     <ControlTemplate x:Key="SelectionBoxTemplate" TargetType="{x:Type controls:SelectionBox}">

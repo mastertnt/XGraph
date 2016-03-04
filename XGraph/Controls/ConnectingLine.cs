@@ -1,169 +1,76 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using XGraph.Extensions;
-using XGraph.ViewModels;
 
 namespace XGraph.Controls
 {
     /// <summary>
-    /// This class represents a connection during the building (when the user drags it).
+    /// Class defining a ghost line used to define a connection.
     /// </summary>
-    /// <!-- Nicolas Baudrey -->
-    public class ConnectingLine : Adorner
+    public class ConnectingLine : Control
     {
-        #region Fields
+        #region Dependencies
 
         /// <summary>
-        /// This field stores the source connector of the adorner.
+        /// Identifies the From dependency property.
         /// </summary>
-        private OutputConnector mSourceConnector = null;
+        public static readonly DependencyProperty FromProperty = DependencyProperty.Register("From", typeof(Point), typeof(ConnectingLine), new FrameworkPropertyMetadata(new Point()));
 
         /// <summary>
-        /// This field stores the pen of the adorner.
+        /// Identifies the To dependency property.
         /// </summary>
-        private Pen mPen;
+        public static readonly DependencyProperty ToProperty = DependencyProperty.Register("To", typeof(Point), typeof(ConnectingLine), new FrameworkPropertyMetadata(new Point()));
 
-        /// <summary>
-        /// This field stores the geometry to draw.
-        /// </summary>
-        private PathGeometry mDrawingGeometry;
-
-        #endregion // Fields.
+        #endregion // Dependencies.
 
         #region Constructors
 
         /// <summary>
-        /// Default constructor.
+        /// Initializes the <see cref="ConnectingLine"/> class.
         /// </summary>
-        /// <param name="pElement">The parent element.</param>
-        /// <param name="pSourceConnector">The source connector.</param>
-        public ConnectingLine(UIElement pElement, OutputConnector pSourceConnector)
-            : base(pElement)
+        static ConnectingLine()
         {
-            this.mSourceConnector = pSourceConnector;
-            this.mPen = new Pen(new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF0000")), 1) {LineJoin = PenLineJoin.Round};
-            this.Cursor = Cursors.Cross;
+            // set the key to reference the style for this control
+            FrameworkElement.DefaultStyleKeyProperty.OverrideMetadata(typeof(ConnectingLine), new FrameworkPropertyMetadata(typeof(ConnectingLine)));
         }
 
         #endregion // Constructors.
 
-        #region Methods
+        #region Properties
 
         /// <summary>
-        /// This method is called to render the adorner.
+        /// Gets or sets the initiale position of the connecting line.
         /// </summary>
-        /// <param name="pDC">The current drawing context.</param>
-        protected override void OnRender(DrawingContext pDC)
+        public Point From
         {
-            base.OnRender(pDC);
-            pDC.DrawGeometry(null, this.mPen, this.mDrawingGeometry);
-
-            // without a background the OnMouseMove event would not be fired
-            // Alternative: implement a Canvas as a child of this adorner, like
-            // the ConnectionAdorner does.
-            pDC.DrawRectangle(Brushes.Transparent, null, new Rect(this.RenderSize));
-        }
-
-        /// <summary>
-        /// This method is called when mouse move occured on the adorner.
-        /// </summary>
-        /// <param name="pEventArgs">The event arguments</param>
-        protected override void OnMouseMove(MouseEventArgs pEventArgs)
-        {
-            if (pEventArgs.LeftButton == MouseButtonState.Pressed)
+            get
             {
-                if (this.IsMouseCaptured == false)
-                {
-                    this.CaptureMouse();
-                }
-
-                // Create a path according to the source and the end.
-                this.UpdatePathGeometry(pEventArgs.GetPosition(this));
-
-                // Redraw it.
-                this.InvalidateVisual();
+                return (Point)this.GetValue(FromProperty);
             }
-            else
+            set
             {
-                if (this.IsMouseCaptured)
-                {
-                    this.ReleaseMouseCapture();
-                }
+                this.SetValue(FromProperty, value);
             }
         }
 
         /// <summary>
-        /// This method is called when a mouse button up occured on the adorner.
+        /// Gets or sets the final position of the connecting line.
         /// </summary>
-        /// <param name="pEventArgs">The event arguments</param>
-        protected override void OnMouseUp(MouseButtonEventArgs pEventArgs)
+        public Point To
         {
-            // Release the mouse capture.
-            if (this.IsMouseCaptured)
+            get
             {
-                this.ReleaseMouseCapture();
+                return (Point)this.GetValue(ToProperty);
             }
-
-            // Getting the position.
-            Point lHitPoint = pEventArgs.GetPosition(this);
-
-            AdornerLayeredCanvas lParentCanvas = this.AdornedElement as AdornerLayeredCanvas;
-            if (lParentCanvas != null)
+            set
             {
-                // Remove the adorner.
-                AdornerLayer lLayer = lParentCanvas.AdornerLayer;
-                if (lLayer != null)
-                {
-                    lLayer.Remove(this);
-                }
-
-                // Hitting the target connector.
-                InputConnector lTargetConnector = lParentCanvas.HitControl<InputConnector>(lHitPoint);
-                if (lTargetConnector != null)
-                {
-                    GraphViewModel lGraphViewModel = lParentCanvas.DataContext as GraphViewModel;
-                    if (lGraphViewModel != null)
-                    {
-                        PortViewModel lTargetViewModel = lTargetConnector.ParentPort.Content as PortViewModel;
-                        PortViewModel lSourceViewModel = this.mSourceConnector.ParentPort.Content as PortViewModel;
-                        if (lTargetViewModel != null && lSourceViewModel.CanBeConnectedTo(lTargetViewModel))
-                        {
-                            ConnectionViewModel lConnectionViewModel = new ConnectionViewModel();
-                            lConnectionViewModel.Output= lSourceViewModel;
-                            lConnectionViewModel.Input = lTargetViewModel;
-                            lGraphViewModel.AddConnection(lConnectionViewModel);
-                        }
-                    }
-                }
+                this.SetValue(ToProperty, value);
             }
         }
-        
-        /// <summary>
-        /// This method computes the final geometry for the path.
-        /// </summary>
-        /// <param name="pFinalPosition">The final path position.</param>
-        /// <returns>The path geometry.</returns>
-        private void UpdatePathGeometry(Point pFinalPosition)
-        {
-            if (this.mDrawingGeometry == null)
-            {
-                this.mDrawingGeometry = new PathGeometry();
-            }
 
-            List<Point> lPoints = this.mSourceConnector.Position.GetShortestPath(pFinalPosition);
-            this.mDrawingGeometry.Figures.Clear();
-            PathFigure lFigure = new PathFigure {StartPoint = this.mSourceConnector.Position};
-            lPoints.RemoveAt(0);
-            lFigure.Segments.Add(new BezierSegment(lPoints[0], lPoints[1], lPoints[2], true));
-            this.mDrawingGeometry.Figures.Add(lFigure);
-        }
-
-        #endregion // Methods.
+        #endregion // Properties.
     }
 }
-

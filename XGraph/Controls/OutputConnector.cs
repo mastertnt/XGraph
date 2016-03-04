@@ -76,7 +76,7 @@ namespace XGraph.Controls
                     AdornerLayer lLayer = lParentCanvas.AdornerLayer;
                     if (lLayer != null)
                     {
-                        ConnectingLine lConnectingLine = new ConnectingLine(lParentCanvas, this);
+                        ConnectingLineAdorner lConnectingLine = new ConnectingLineAdorner(lParentCanvas, this);
                         lLayer.Add(lConnectingLine);
                         pEventArgs.Handled = true;
                     }

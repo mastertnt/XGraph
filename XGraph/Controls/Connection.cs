@@ -33,7 +33,7 @@ namespace XGraph.Controls
         #region Constructors
 
         /// <summary>
-        /// Static constructor.
+        /// Initializes the <see cref="Connection"/> class.
         /// </summary>
         static Connection()
         {
