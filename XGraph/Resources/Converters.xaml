@@ -6,5 +6,6 @@
     <converters:InputPortToVisibilityConverter x:Key="InputPortToVisibilityConverter" />
     <converters:OutputPortToVisibilityConverter x:Key="OutputPortToVisibilityConverter" />
     <converters:PortDirectionToHorizontalAlignmentConverter x:Key="PortDirectionToHorizontalAlignmentConverter" />
+    <converters:NodeViewPortsCountToBoundingPaddingConverter x:Key="NodeViewPortsCountToBoundingPaddingConverter" />
 
 </ResourceDictionary>

@@ -129,22 +129,32 @@
                     </VisualState>
                 </VisualStateGroup>
             </VisualStateManager.VisualStateGroups>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="{markup:GridLength {StaticResource NodeView_Bevel_Size}}" />
-            </Grid.RowDefinitions>
-            <controls:NodeViewShape x:Name="INNER_BackgroundShape" Fill="{TemplateBinding Background}" BevelLenght="{StaticResource NodeView_Bevel_Size}" Grid.RowSpan="3" Margin="1"/>
-            <controls:NodeViewShape x:Name="INNER_SelectedShape" Fill="Transparent" BevelLenght="{StaticResource NodeView_Bevel_Size}" Stroke="{StaticResource Selection_Border_Brush}" StrokeThickness="1" Grid.RowSpan="3" StrokeDashArray="3 2" Opacity="0.0" />
-            <Grid Margin="0,0,0,3">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
-                <controls:MoveThumb Grid.Column="0" x:Name="INNER_Movethumb" VerticalAlignment="Top" />
-                <ContentPresenter Grid.Column="1" ContentTemplate="{TemplateBinding ContentTemplate}" />
-            </Grid>
-            <controls:PortContainer Grid.Row="1" x:Name="PART_PortContainer" Background="{TemplateBinding Background}" />
+            <Border x:Name="INNER_BoundingBox">
+                <Border.Padding>
+                    <MultiBinding Converter="{StaticResource NodeViewPortsCountToBoundingPaddingConverter}">
+                        <Binding Path="Content.Ports.Count" RelativeSource="{RelativeSource TemplatedParent}" />
+                        <Binding Path="Content.Ports" RelativeSource="{RelativeSource TemplatedParent}" />
+                    </MultiBinding>
+                </Border.Padding>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="{markup:GridLength {StaticResource NodeView_Bevel_Size}}" />
+                    </Grid.RowDefinitions>
+                    <controls:NodeViewShape x:Name="INNER_BackgroundShape" Fill="{TemplateBinding Background}" BevelLenght="{StaticResource NodeView_Bevel_Size}" Grid.RowSpan="3" Margin="1"/>
+                    <controls:NodeViewShape x:Name="INNER_SelectedShape" Fill="Transparent" BevelLenght="{StaticResource NodeView_Bevel_Size}" Stroke="{StaticResource Selection_Border_Brush}" StrokeThickness="1" Grid.RowSpan="3" StrokeDashArray="3 2" Opacity="0.0" />
+                    <Grid Margin="0,0,0,3" Grid.Row="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <controls:MoveThumb Grid.Column="0" x:Name="INNER_Movethumb" VerticalAlignment="Top" />
+                        <ContentPresenter Grid.Column="1" ContentTemplate="{TemplateBinding ContentTemplate}" />
+                    </Grid>
+                    <controls:PortContainer Grid.Row="1" x:Name="PART_PortContainer" Background="{TemplateBinding Background}" />
+                </Grid>
+            </Border>
         </Grid>
     </ControlTemplate>
 
