@@ -1,6 +1,8 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+using System.Windows.Media;
+using XGraph.ViewModels;
 
 namespace XGraph.Controls
 {
@@ -16,7 +18,8 @@ namespace XGraph.Controls
         /// </summary>
         static PortContainer()
         {
-            FrameworkElement.DefaultStyleKeyProperty.OverrideMetadata(typeof(PortContainer), new FrameworkPropertyMetadata(typeof(PortContainer)));
+            PortContainer.DefaultStyleKeyProperty.OverrideMetadata(typeof(PortContainer), new FrameworkPropertyMetadata(typeof(PortContainer)));
+            PortContainer.BackgroundProperty.OverrideMetadata(typeof(PortContainer), new FrameworkPropertyMetadata(null, OnBackgroundChanged));
         }
 
         #endregion // Constructors.
@@ -46,8 +49,40 @@ namespace XGraph.Controls
             PortView lContainer = pElement as PortView;
             if (lContainer != null)
             {
-                // Binding the background.
+                // Updating the background.
                 lContainer.Background = this.Background;
+            }
+        }
+
+        /// <summary>
+        /// Updates the items background brush by applying the background of this container.
+        /// </summary>
+        private void UpdateItemsBackground()
+        {
+            if (this.ItemsSource != null)
+            {
+                foreach (PortViewModel lItem in this.ItemsSource)
+                {
+                    PortView lPortView = this.ItemContainerGenerator.ContainerFromItem(lItem) as PortView;
+                    if (lPortView != null)
+                    {
+                        lPortView.Background = this.Background;
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Delegate called when the background brush changed.
+        /// </summary>
+        /// <param name="pObject">The modified control.</param>
+        /// <param name="pEventArgs">The event arguments.</param>
+        private static void OnBackgroundChanged(DependencyObject pObject, DependencyPropertyChangedEventArgs pEventArgs)
+        {
+            PortContainer lContainer = pObject as PortContainer;
+            if (lContainer != null)
+            {
+                lContainer.UpdateItemsBackground();
             }
         }
 

@@ -67,17 +67,17 @@ namespace XGraph.Controls
         /// <param name="pEventArgs">The event arguments.</param>
         private static void OnIsSelectedChanged(DependencyObject pObject, DependencyPropertyChangedEventArgs pEventArgs)
         {
-            AGraphItemContainer lNodeView = pObject as AGraphItemContainer;
-            if (lNodeView != null)
+            AGraphItemContainer lItem = pObject as AGraphItemContainer;
+            if (lItem != null)
             {
-                lNodeView.UpdateVisualState();
+                lItem.UpdateVisualState();
             }
         }
 
         /// <summary>
         /// Updates the visual state of the node.
         /// </summary>
-        private void UpdateVisualState()
+        protected virtual void UpdateVisualState()
         {
             if (this.IsSelected)
             {

@@ -16,6 +16,18 @@ namespace XGraph.Controls
     /// <!-- Damien Porte -->
     public class ConnectorsPresenter : Control
     {
+        #region Constructors
+
+        /// <summary>
+        /// Initializes the <see cref="PortContainer"/> class.
+        /// </summary>
+        static ConnectorsPresenter()
+        {
+            Control.BackgroundProperty.OverrideMetadata(typeof(ConnectorsPresenter), new FrameworkPropertyMetadata(null, OnBackgroundChanged));
+        }
+
+        #endregion // Constructors.
+
         #region Properties
 
         /// <summary>
@@ -49,12 +61,37 @@ namespace XGraph.Controls
 
                     // Creating the adorner and propagating this control background.
                     this.Adorner = new ConnectorsAdorner(lPortView);
-                    this.Adorner.InputConnector.Background = this.Background;
-                    this.Adorner.OutputConnector.Background = this.Background;
+                    this.UpdateConnectorsBackground();
 
                     // Adding the adorner to the layer.
                     lLayer.Add(this.Adorner);
                 }
+            }
+        }
+
+        /// <summary>
+        /// Updates the connectors background brush by applying the background of this container.
+        /// </summary>
+        private void UpdateConnectorsBackground()
+        {
+            if (this.Adorner != null)
+            {
+                this.Adorner.InputConnector.Background = this.Background;
+                this.Adorner.OutputConnector.Background = this.Background;
+            }
+        }
+
+        /// <summary>
+        /// Delegate called when the background brush changed.
+        /// </summary>
+        /// <param name="pObject">The modified control.</param>
+        /// <param name="pEventArgs">The event arguments.</param>
+        private static void OnBackgroundChanged(DependencyObject pObject, DependencyPropertyChangedEventArgs pEventArgs)
+        {
+            ConnectorsPresenter lContainer = pObject as ConnectorsPresenter;
+            if (lContainer != null)
+            {
+                lContainer.UpdateConnectorsBackground();
             }
         }
 
