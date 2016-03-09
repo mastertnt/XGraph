@@ -106,7 +106,7 @@ namespace XGraph.Behaviors
         /// <param name="pEventArgs">The event arguments.</param>
         private void OnParentViewMouseDown(object pSender, MouseButtonEventArgs pEventArgs)
         {
-            if (pEventArgs.ChangedButton == MouseButton.Left)
+            if (this.mParentView.IsReadOnly == false && pEventArgs.ChangedButton == MouseButton.Left)
             {
                 this.mIsLeftMouseButtonDownOnView = true;
                 this.mOrigMouseDownPoint = pEventArgs.GetPosition(this.mParentView);

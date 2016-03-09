@@ -12,6 +12,15 @@ namespace XGraph.Controls
     [TemplatePart(Name = PART_SELECTION_BOX_CANVAS, Type = typeof(Canvas))]
     public class GraphView : ListBox
     {
+        #region Dependencies
+
+        /// <summary>
+        /// Identifies the IsReadOnly dependency property.
+        /// </summary>
+        public static readonly DependencyProperty IsReadOnlyProperty = DependencyProperty.Register("IsReadOnly", typeof(bool), typeof(GraphView), new FrameworkPropertyMetadata(false, OnIsReadOnlyChanged));
+
+        #endregion // Dependencies.
+
         #region Fields
 
         /// <summary>
@@ -43,6 +52,25 @@ namespace XGraph.Controls
         }
 
         #endregion // Constructors.
+
+        #region Properties
+
+        /// <summary>
+        /// Gets or sets the flag indicating if the view is read  only.
+        /// </summary>
+        public bool IsReadOnly
+        {
+            get
+            {
+                return (bool)this.GetValue(IsReadOnlyProperty);
+            }
+            set
+            {
+                this.SetValue(IsReadOnlyProperty, value);
+            }
+        }
+
+        #endregion // Properties.
 
         #region Methods
 
@@ -103,6 +131,38 @@ namespace XGraph.Controls
             // Initializing the box selection behavior.
             this.mBoxSelectionBehavior = new BoxSelectionBehavior(this, lSelectionBoxCanvas);
             this.mBoxSelectionBehavior.DragThreshold = BOX_SELECTION_DRAG_THRESHOLD;
+
+            // Updating the visual.
+            this.UpdateVisualState();
+        }
+
+        /// <summary>
+        /// Delegate called when the read only state changed.
+        /// </summary>
+        /// <param name="pObject">The modified control.</param>
+        /// <param name="pEventArgs">The event arguments.</param>
+        private static void OnIsReadOnlyChanged(DependencyObject pObject, DependencyPropertyChangedEventArgs pEventArgs)
+        {
+            GraphView lGraphView = pObject as GraphView;
+            if (lGraphView != null)
+            {
+                lGraphView.UpdateVisualState();
+            }
+        }
+
+        /// <summary>
+        /// Change the visual state according to the control state.
+        /// </summary>
+        private void UpdateVisualState()
+        {
+            if (this.IsReadOnly)
+            {
+                VisualStateManager.GoToState(this, "IsReadOnly", true);
+            }
+            else
+            {
+                VisualStateManager.GoToState(this, "Normal", true);
+            }
         }
 
         #endregion // Methods

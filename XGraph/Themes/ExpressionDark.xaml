@@ -10,16 +10,31 @@
 
     <!-- GraphView template. -->
     <ControlTemplate x:Key="GraphViewTemplate" TargetType="{x:Type controls:GraphView}">
-        <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
-            <Grid>
-                <ScrollViewer x:Name="INNER_ScrollViewer" Focusable="False" Padding="{TemplateBinding Padding}" Background="{TemplateBinding Background}" BorderBrush="Transparent" BorderThickness="0" KeyboardNavigation.TabNavigation="{TemplateBinding KeyboardNavigation.TabNavigation}" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
-                    <ItemsPresenter />
-                </ScrollViewer>
-                <Canvas x:Name="PART_SelectionBoxCanvas" >
-                    <controls:SelectionBox />
-                </Canvas>
-            </Grid>
-        </Border>
+        <Grid x:Name="INNER_RootGrid">
+            <VisualStateManager.VisualStateGroups>
+                <VisualStateGroup x:Name="CommonStates">
+                    <VisualState x:Name="Normal" />
+                    <VisualState x:Name="IsReadOnly">
+                        <Storyboard>
+                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="INNER_IsReadOnlyLayer" Storyboard.TargetProperty="Visibility">
+                                <DiscreteObjectKeyFrame KeyTime="00:00:00" Value="{x:Static Visibility.Visible}"/>
+                            </ObjectAnimationUsingKeyFrames>
+                        </Storyboard>
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateManager.VisualStateGroups>
+            <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
+                <Grid>
+                    <ScrollViewer x:Name="INNER_ScrollViewer" Focusable="False" Padding="{TemplateBinding Padding}" Background="{TemplateBinding Background}" BorderBrush="Transparent" BorderThickness="0" KeyboardNavigation.TabNavigation="{TemplateBinding KeyboardNavigation.TabNavigation}" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+                        <ItemsPresenter />
+                    </ScrollViewer>
+                    <Canvas x:Name="PART_SelectionBoxCanvas" >
+                        <controls:SelectionBox />
+                    </Canvas>
+                    <Border x:Name="INNER_IsReadOnlyLayer" Background="{StaticResource GraphView_IsReadOnlyLayer_Background_Brush}" Opacity="0.3" Visibility="Collapsed" />
+                </Grid>
+            </Border>
+        </Grid>
     </ControlTemplate>
     
     <!-- GraphView style. -->

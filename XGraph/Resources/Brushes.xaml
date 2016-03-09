@@ -2,6 +2,7 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <SolidColorBrush x:Key="GraphView_Background_Brush" Color="#FF464646" />
+    <SolidColorBrush x:Key="GraphView_IsReadOnlyLayer_Background_Brush" Color="White" />
     
     <SolidColorBrush x:Key="NodeView_Background_Brush" Color="#FF006599" />
     <SolidColorBrush x:Key="NodeView_IsActiveBackground_Brush" Color="#FF2F874D" />
