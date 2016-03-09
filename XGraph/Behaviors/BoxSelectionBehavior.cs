@@ -197,16 +197,12 @@ namespace XGraph.Behaviors
                     // Drag selection has ended, apply the 'selection box'.
                     this.mIsDraggingSelectionBox = false;
                     this.ApplySelectionBox();
-
-                    pEventArgs.Handled = true;
                 }
 
                 if (this.mIsLeftMouseButtonDownOnView)
                 {
                     this.mIsLeftMouseButtonDownOnView = false;
                     this.mParentView.ReleaseMouseCapture();
-
-                    pEventArgs.Handled = true;
                 }
             }
         }
