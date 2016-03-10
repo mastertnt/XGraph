@@ -25,7 +25,9 @@ namespace XGraphTest
         public MainWindow()
         {
             InitializeComponent();
-            this.GraphView.DataContext = this.CreateTypeGraph();
+
+            GraphViewModel lGraph = this.CreateTypeGraph();
+            this.GraphView.DataContext = lGraph;
             this.GraphView.SelectionChanged += GraphView_SelectionChanged;
         }
 

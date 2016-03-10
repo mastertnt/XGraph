@@ -41,6 +41,10 @@ namespace XGraph.ViewModels
             this.mGraphItems = new ObservableCollection<IGraphItemViewModel>();
             this.mNodes = new ObservableCollection<NodeViewModel>();
             this.mConnections = new ObservableCollection<ConnectionViewModel>();
+
+            this.ViewScale = 1.0;
+            this.ViewOffsetX = 0.0;
+            this.ViewOffsetY = 0.0;
         }
 
         #endregion // Constructors.
@@ -113,6 +117,33 @@ namespace XGraph.ViewModels
             {
                 return this.mConnections;
             }
+        }
+
+        /// <summary>
+        /// Get or set the current scale (or zoom factor) of the view.
+        /// </summary>
+        public double ViewScale
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Get or set the X offset (in content coordinates) of the view on the content.
+        /// </summary>
+        public double ViewOffsetX
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Get or set the Y offset (in content coordinates) of the view on the content.
+        /// </summary>
+        public double ViewOffsetY
+        {
+            get;
+            set;
         }
 
         #endregion // Properties.

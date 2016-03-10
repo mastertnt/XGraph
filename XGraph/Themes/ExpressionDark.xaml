@@ -391,7 +391,8 @@
         <xzoomandpan:TooledZoomAndPanControl DataContext="{TemplateBinding DataContext}" ContentWidth="{TemplateBinding GraphWidth}" 
                                              ContentHeight="{TemplateBinding GraphHeight}" OverviewHeight="{TemplateBinding OverviewHeight}" 
                                              OverviewWidth="{TemplateBinding OverviewWidth}" OverviewDefaultOpacity="{TemplateBinding OverviewDefaultOpacity}" 
-                                             OverviewVisibility="{TemplateBinding OverviewVisibility}">
+                                             OverviewVisibility="{TemplateBinding OverviewVisibility}"
+                                             ContentScale="{Binding ViewScale, Mode=TwoWay}" ContentOffsetX="{Binding ViewOffsetX, Mode=TwoWay}" ContentOffsetY="{Binding ViewOffsetY, Mode=TwoWay}">
             <controls:SimpleGraphView x:Name="PART_SimpleGraphView" ItemsSource="{Binding Items}" BorderThickness="0"/>
             <xzoomandpan:TooledZoomAndPanControl.OverviewContent>
                 <controls:SimpleGraphView x:Name="PART_Overview" ItemsSource="{Binding Items}" IsReadOnly="true" />
