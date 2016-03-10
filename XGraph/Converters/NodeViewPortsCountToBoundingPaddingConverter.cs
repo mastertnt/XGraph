@@ -35,6 +35,11 @@ namespace XGraph.Converters
         /// <returns>The value converted.</returns>
         public object Convert(object[] pValue, Type pTargetType, object pExtraParameter, CultureInfo pCulture)
         {
+            if (pValue.Any(lValue => lValue == DependencyProperty.UnsetValue))
+            {
+                return Binding.DoNothing;
+            }
+
             // First value is the port list count, second is the list.
             int lPortsCount = System.Convert.ToInt32(pValue[0]);
             PortViewModelCollection lPorts = pValue[1] as PortViewModelCollection;

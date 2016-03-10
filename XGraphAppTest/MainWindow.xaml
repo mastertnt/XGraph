@@ -12,6 +12,6 @@
             <Button Content="Delete" Click="Delete_Button_Click" />
             <ToggleButton x:Name="mIsActiveButton" Content="IsActive" Click="IsActive_Button_Click" />
         </StackPanel>
-        <xgraph:GraphView x:Name="GraphView" ItemsSource="{Binding Items}" Grid.Row="1" />
+        <xgraph:GraphView x:Name="GraphView" Grid.Row="1" />
     </Grid>
 </Window>

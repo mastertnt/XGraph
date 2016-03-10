@@ -133,16 +133,15 @@ namespace XGraph.Controls
             if (lViewModel == null)
             {
                 // Unreferencing the connectors to avoid memory leaks.
-                this.OutputConnector = null;
-                this.InputConnector = null;
-
                 this.OutputConnector.PositionChanged -= this.OnConnectorPositionChanged;
                 this.InputConnector.PositionChanged -= this.OnConnectorPositionChanged;
+                this.OutputConnector = null;
+                this.InputConnector = null;
             }
             else
             {
                 // Filling the output and input connectors.
-                GraphView lParentCanvas = this.FindVisualParent<GraphView>();
+                SimpleGraphView lParentCanvas = this.FindVisualParent<SimpleGraphView>();
                 if (lViewModel != null && lParentCanvas != null)
                 {
                     NodeView lOutputNode = lParentCanvas.GetContainerForViewModel<NodeViewModel, NodeView>(lViewModel.Output.ParentNode);
@@ -280,6 +279,9 @@ namespace XGraph.Controls
             this.UpdateRendering();
         }
 
+        /// <summary>
+        /// Updates the connection rendering properties.
+        /// </summary>
         private void UpdateRendering()
         {
             // Computes the new bounding box.

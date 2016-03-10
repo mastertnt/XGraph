@@ -27,7 +27,6 @@ namespace XGraphTest
             InitializeComponent();
             this.GraphView.DataContext = this.CreateTypeGraph();
             this.GraphView.SelectionChanged += GraphView_SelectionChanged;
-            this.GraphView.SelectionMode = SelectionMode.Extended;
         }
 
         /// <summary>
@@ -120,7 +119,7 @@ namespace XGraphTest
         private void Delete_Button_Click(object sender, RoutedEventArgs e)
         {
             GraphViewModel lRootViewModel = this.GraphView.DataContext as GraphViewModel;
-            foreach (IGraphItemViewModel lItem in this.GraphView.SelectedItems.Cast<IGraphItemViewModel>().ToList())
+            foreach (IGraphItemViewModel lItem in this.GraphView.SelectedViewModels)
             {
                 ConnectionViewModel lConnection = lItem as ConnectionViewModel;
                 if (lConnection != null)
@@ -139,7 +138,7 @@ namespace XGraphTest
         private void IsActive_Button_Click(object sender, RoutedEventArgs e)
         {
             GraphViewModel lRootViewModel = this.GraphView.DataContext as GraphViewModel;
-            NodeViewModel lSelectedItem = this.GraphView.SelectedItems.OfType<NodeViewModel>().FirstOrDefault();
+            NodeViewModel lSelectedItem = this.GraphView.SelectedViewModels.OfType<NodeViewModel>().FirstOrDefault();
             if (lSelectedItem != null)
             {
                 lSelectedItem.IsActive = !lSelectedItem.IsActive;
@@ -161,14 +160,14 @@ namespace XGraphTest
 
         private void GraphView_SelectionChanged(object sender, SelectionChangedEventArgs pEventArgs)
         {
-            NodeViewModel lSelectedItem = this.GraphView.SelectedItems.OfType<NodeViewModel>().FirstOrDefault();
+            NodeViewModel lSelectedItem = this.GraphView.SelectedViewModels.OfType<NodeViewModel>().FirstOrDefault();
             if (lSelectedItem != null)
             {
                 this.mIsActiveButton.Content = "IsActive : " + lSelectedItem.DisplayString;
                 this.mIsActiveButton.IsChecked = lSelectedItem.IsActive;
             }
 
-            if (this.GraphView.SelectedItems.OfType<NodeViewModel>().Count() == 0)
+            if (this.GraphView.SelectedViewModels.OfType<NodeViewModel>().Count() == 0)
             {
                 this.mIsActiveButton.Content = "IsActive";
             }

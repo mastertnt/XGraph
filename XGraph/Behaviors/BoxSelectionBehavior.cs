@@ -21,7 +21,7 @@ namespace XGraph.Behaviors
         /// <summary>
         /// Stores the parent view.
         /// </summary>
-        private GraphView mParentView;
+        private SimpleGraphView mParentView;
 
         /// <summary>
         /// Stores the flag indicating if the left mouse button is down on the view, that is, not on one of its item.
@@ -46,7 +46,7 @@ namespace XGraph.Behaviors
         /// Initializes a new instance of the <see cref="BoxSelectionBehavior"/> class.
         /// </summary>
         /// <param name="pSelectionBoxCanvas">The canvas containing the box.</param>
-        public BoxSelectionBehavior(GraphView pParent, Canvas pSelectionBoxCanvas)
+        public BoxSelectionBehavior(SimpleGraphView pParent, Canvas pSelectionBoxCanvas)
         {
             this.mParentView = pParent;
             this.SelectionBoxCanvas = pSelectionBoxCanvas;
@@ -234,7 +234,6 @@ namespace XGraph.Behaviors
                 AGraphItemContainer lContainer = this.mParentView.GetContainerForViewModel(lItem);
                 if (lContainer != null)
                 {
-
                     if (lSelectionRect.Contains(lContainer.BoundingBox))
                     {
                         this.mParentView.SelectedItems.Add(lItem);

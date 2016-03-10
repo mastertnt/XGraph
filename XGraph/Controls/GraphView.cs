@@ -1,23 +1,47 @@
 ﻿using System;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using XGraph.Behaviors;
 using XGraph.ViewModels;
 
 namespace XGraph.Controls
 {
     /// <summary>
-    /// Graph view is a list box : it then already handle the selection ... etc ...
+    /// Class defining a graph view having the zoom and pan capability.
     /// </summary>
-    [TemplatePart(Name = PART_SELECTION_BOX_CANVAS, Type = typeof(Canvas))]
-    public class GraphView : ListBox
+    public class GraphView : Control
     {
         #region Dependencies
 
         /// <summary>
-        /// Identifies the IsReadOnly dependency property.
+        /// Identifies the GraphWidth dependency property.
         /// </summary>
-        public static readonly DependencyProperty IsReadOnlyProperty = DependencyProperty.Register("IsReadOnly", typeof(bool), typeof(GraphView), new FrameworkPropertyMetadata(false, OnIsReadOnlyChanged));
+        public static readonly DependencyProperty GraphWidthProperty = DependencyProperty.Register("GraphWidth", typeof(double), typeof(GraphView), new FrameworkPropertyMetadata(2000.0));
+
+        /// <summary>
+        /// Identifies the GraphHeight dependency property.
+        /// </summary>
+        public static readonly DependencyProperty GraphHeightProperty = DependencyProperty.Register("GraphHeight", typeof(double), typeof(GraphView), new FrameworkPropertyMetadata(1500.0));
+        
+        /// <summary>
+        /// Identifies the OverviewWidth dependency property.
+        /// </summary>
+        public static readonly DependencyProperty OverviewWidthProperty = DependencyProperty.Register("OverviewWidth", typeof(double), typeof(GraphView), new FrameworkPropertyMetadata(200.0));
+
+        /// <summary>
+        /// Identifies the OverviewHeight dependency property.
+        /// </summary>
+        public static readonly DependencyProperty OverviewHeightProperty = DependencyProperty.Register("OverviewHeight", typeof(double), typeof(GraphView), new FrameworkPropertyMetadata(200.0));
+
+        /// <summary>
+        /// Identifies the OverviewDefaultOpacity attached dependency property.
+        /// </summary>
+        public static readonly DependencyProperty OverviewDefaultOpacityProperty = DependencyProperty.RegisterAttached("OverviewDefaultOpacity", typeof(double), typeof(GraphView), new FrameworkPropertyMetadata(0.3));
+
+        /// <summary>
+        /// Identifies the OverviewVisibility attached dependency property.
+        /// </summary>
+        public static readonly DependencyProperty OverviewVisibilityProperty = DependencyProperty.RegisterAttached("OverviewVisibility", typeof(Visibility), typeof(GraphView), new FrameworkPropertyMetadata(Visibility.Visible));
 
         #endregion // Dependencies.
 
@@ -31,12 +55,18 @@ namespace XGraph.Controls
         /// <summary>
         /// Name of the parts that have to be in the control template.
         /// </summary>
-        private const string PART_SELECTION_BOX_CANVAS = "PART_SelectionBoxCanvas";
+        private const string PART_SIMPLE_GRAPH_VIEW = "PART_SimpleGraphView";
+        private const string PART_OVERVIEW = "PART_Overview";
 
         /// <summary>
-        /// Stores the behavior handling the selection using a box in the view.
+        /// Stores the inner simple graph view.
         /// </summary>
-        private BoxSelectionBehavior mBoxSelectionBehavior;
+        private SimpleGraphView mSimpleGraphView;
+
+        /// <summary>
+        /// Stores the overview.
+        /// </summary>
+        private SimpleGraphView mOverview;
 
         #endregion // Fields.
 
@@ -47,71 +77,132 @@ namespace XGraph.Controls
         /// </summary>
         static GraphView()
         {
-            FrameworkElement.DefaultStyleKeyProperty.OverrideMetadata(typeof(GraphView), new FrameworkPropertyMetadata(typeof(GraphView)));
-            ListBox.SelectionModeProperty.OverrideMetadata(typeof(GraphView), new FrameworkPropertyMetadata(SelectionMode.Extended));
+            GraphView.DefaultStyleKeyProperty.OverrideMetadata(typeof(GraphView), new FrameworkPropertyMetadata(typeof(GraphView)));
         }
 
         #endregion // Constructors.
 
+        #region Events
+
+        /// <summary>
+        /// Event raised when the selection is modified.
+        /// </summary>
+        public event SelectionChangedEventHandler SelectionChanged;
+
+        #endregion // Events.
+
         #region Properties
 
         /// <summary>
-        /// Gets or sets the flag indicating if the view is read  only.
+        /// Gets the selected items view model.
         /// </summary>
-        public bool IsReadOnly
+        public IGraphItemViewModel[] SelectedViewModels
         {
             get
             {
-                return (bool)this.GetValue(IsReadOnlyProperty);
+                if (this.mSimpleGraphView != null)
+                {
+                    return this.mSimpleGraphView.SelectedItems.Cast<IGraphItemViewModel>().ToArray();
+                }
+
+                return new IGraphItemViewModel[] { };
+            }
+        }
+
+
+        /// <summary>
+        /// Gets or sets the width of the content.
+        /// </summary>
+        public double GraphWidth
+        {
+            get
+            {
+                return (double)GetValue(GraphWidthProperty);
             }
             set
             {
-                this.SetValue(IsReadOnlyProperty, value);
+                SetValue(GraphWidthProperty, value);
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the height of the content.
+        /// </summary>
+        public double GraphHeight
+        {
+            get
+            {
+                return (double)GetValue(GraphHeightProperty);
+            }
+            set
+            {
+                SetValue(GraphHeightProperty, value);
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the width of the overview.
+        /// </summary>
+        public double OverviewWidth
+        {
+            get
+            {
+                return (double)GetValue(OverviewWidthProperty);
+            }
+            set
+            {
+                SetValue(OverviewWidthProperty, value);
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the height of the overview.
+        /// </summary>
+        public double OverviewHeight
+        {
+            get
+            {
+                return (double)GetValue(OverviewHeightProperty);
+            }
+            set
+            {
+                SetValue(OverviewHeightProperty, value);
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the opacity of the overview when it is displayed and the mouse is not over.
+        /// </summary>
+        public double OverviewDefaultOpacity
+        {
+            get
+            {
+                return (double)GetValue(OverviewDefaultOpacityProperty);
+            }
+            set
+            {
+                SetValue(OverviewDefaultOpacityProperty, value);
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the overview visibility.
+        /// </summary>
+        public Visibility OverviewVisibility
+        {
+            get
+            {
+                return (Visibility)GetValue(OverviewVisibilityProperty);
+            }
+            set
+            {
+                SetValue(OverviewVisibilityProperty, value);
             }
         }
 
         #endregion // Properties.
 
         #region Methods
-
-        /// <summary>
-        /// Creates or identifies the element used to display a specified item.
-        /// </summary>
-        /// <returns>
-        /// A <see cref="T:System.Windows.Controls.ListBoxItem" />.
-        /// </returns>
-        protected override DependencyObject GetContainerForItemOverride()
-        {
-            return new GraphItem();
-        }
-
-        /// <summary>
-        /// Returns the node view containing the given view model.
-        /// </summary>
-        /// <param name="pItem">The item contained by the view.</param>
-        /// <returns>The found view if any, null otherwise.</returns>
-        public AGraphItemContainer GetContainerForViewModel(IGraphItemViewModel pItem)
-        {
-            GraphItem lItemView = this.ItemContainerGenerator.ContainerFromItem(pItem) as GraphItem;
-            if (lItemView != null)
-            {
-                return lItemView.TemplateControl;
-            }
-
-            return null;
-        }
-
-        /// <summary>
-        /// Returns the node view containing the given view model.
-        /// </summary>
-        /// <param name="pItem">The item contained by the view.</param>
-        /// <returns>The found view if any, null otherwise.</returns>
-        public TContainer GetContainerForViewModel<TViewModel, TContainer>(TViewModel pItem) 
-            where TViewModel : IGraphItemViewModel
-            where TContainer : AGraphItemContainer
-        {
-            return this.GetContainerForViewModel(pItem) as TContainer;
-        }
 
         /// <summary>
         /// Method called when the control template is applied.
@@ -121,50 +212,30 @@ namespace XGraph.Controls
             base.OnApplyTemplate();
 
             // Getting the parts of the control.
-            Canvas lSelectionBoxCanvas = this.GetTemplateChild(PART_SELECTION_BOX_CANVAS) as Canvas;
+            this.mSimpleGraphView = this.GetTemplateChild(PART_SIMPLE_GRAPH_VIEW) as SimpleGraphView;
+            this.mOverview = this.GetTemplateChild(PART_OVERVIEW) as SimpleGraphView;
 
-            if (lSelectionBoxCanvas == null)
+            if (this.mSimpleGraphView == null || this.mOverview == null)
             {
                 throw new Exception("GraphView control template not correctly defined.");
             }
 
-            // Initializing the box selection behavior.
-            this.mBoxSelectionBehavior = new BoxSelectionBehavior(this, lSelectionBoxCanvas);
-            this.mBoxSelectionBehavior.DragThreshold = BOX_SELECTION_DRAG_THRESHOLD;
-
-            // Updating the visual.
-            this.UpdateVisualState();
+            this.mSimpleGraphView.SelectionChanged += this.OnSimpleGraphViewSelectionChanged;
         }
 
         /// <summary>
-        /// Delegate called when the read only state changed.
+        /// Delegate called when the inner graph view selection changed.
         /// </summary>
-        /// <param name="pObject">The modified control.</param>
+        /// <param name="pSender">The modified control.</param>
         /// <param name="pEventArgs">The event arguments.</param>
-        private static void OnIsReadOnlyChanged(DependencyObject pObject, DependencyPropertyChangedEventArgs pEventArgs)
+        private void OnSimpleGraphViewSelectionChanged(object pSender, SelectionChangedEventArgs pEventArgs)
         {
-            GraphView lGraphView = pObject as GraphView;
-            if (lGraphView != null)
+            if (this.SelectionChanged != null)
             {
-                lGraphView.UpdateVisualState();
+                this.SelectionChanged(pSender, pEventArgs);
             }
         }
 
-        /// <summary>
-        /// Change the visual state according to the control state.
-        /// </summary>
-        private void UpdateVisualState()
-        {
-            if (this.IsReadOnly)
-            {
-                VisualStateManager.GoToState(this, "IsReadOnly", true);
-            }
-            else
-            {
-                VisualStateManager.GoToState(this, "Normal", true);
-            }
-        }
-
-        #endregion // Methods
+        #endregion // Methods.
     }
 }

@@ -57,6 +57,9 @@
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="XZoomAndPan">
+      <HintPath>..\..\XRay\Bin\Release\XZoomAndPan.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Behaviors\BoxSelectionBehavior.cs" />
@@ -74,6 +77,7 @@
     <Compile Include="Controls\ConnectingLineAdorner.cs" />
     <Compile Include="Controls\Connection.cs" />
     <Compile Include="Controls\AConnector.cs" />
+    <Compile Include="Controls\GraphView.cs" />
     <Compile Include="Controls\InputConnector.cs" />
     <Compile Include="Controls\MoveThumb.cs" />
     <Compile Include="Controls\MoveThumbShape.cs" />
@@ -96,7 +100,7 @@
     <Compile Include="Extensions\PointExtensions.cs" />
     <Compile Include="Themes\ExpressionDark.cs" />
     <Compile Include="ViewModels\ConnectionViewModel.cs" />
-    <Compile Include="Controls\GraphView.cs" />
+    <Compile Include="Controls\SimpleGraphView.cs" />
     <Compile Include="ViewModels\GraphViewModel.cs" />
     <Compile Include="ViewModels\PortViewModelCollection.cs" />
     <Page Include="Resources\All.xaml">

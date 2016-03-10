@@ -1,15 +1,16 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:controls="clr-namespace:XGraph.Controls"
-                    xmlns:markup="clr-namespace:XGraph.Extensions.Markup">
+                    xmlns:markup="clr-namespace:XGraph.Extensions.Markup"
+                    xmlns:xzoomandpan="http://schemas.xzoomandpan.com/winfx/2016/xaml">
 
     <!-- Including global resources -->
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="/XGraph;Component/Resources/All.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
-    <!-- GraphView template. -->
-    <ControlTemplate x:Key="GraphViewTemplate" TargetType="{x:Type controls:GraphView}">
+    <!-- SimpleGraphView template. -->
+    <ControlTemplate x:Key="SimpleGraphViewTemplate" TargetType="{x:Type controls:SimpleGraphView}">
         <Grid x:Name="INNER_RootGrid">
             <VisualStateManager.VisualStateGroups>
                 <VisualStateGroup x:Name="CommonStates">
@@ -36,10 +37,10 @@
             </Border>
         </Grid>
     </ControlTemplate>
-    
-    <!-- GraphView style. -->
-    <Style TargetType="{x:Type controls:GraphView}" BasedOn="{StaticResource {x:Type ListBox}}">
-        <Setter Property="Template" Value="{StaticResource GraphViewTemplate}" />
+
+    <!-- SimpleGraphView style. -->
+    <Style TargetType="{x:Type controls:SimpleGraphView}" BasedOn="{StaticResource {x:Type ListBox}}">
+        <Setter Property="Template" Value="{StaticResource SimpleGraphViewTemplate}" />
         <Setter Property="FontFamily" Value="{StaticResource Segoe_UI_Light_FontFamily}" />
         <Setter Property="TextOptions.TextRenderingMode" Value="ClearType" />
         <Setter Property="TextOptions.TextFormattingMode" Value="Display" />
@@ -383,6 +384,24 @@
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="BorderBrush" Value="{StaticResource Selection_Border_Brush}" />
         <Setter Property="Background" Value="{StaticResource Selection_Background_Brush}" />
+    </Style>
+
+    <!-- GraphView template. -->
+    <ControlTemplate x:Key="GraphViewTemplate" TargetType="{x:Type controls:GraphView}">
+        <xzoomandpan:TooledZoomAndPanControl DataContext="{TemplateBinding DataContext}" ContentWidth="{TemplateBinding GraphWidth}" 
+                                             ContentHeight="{TemplateBinding GraphHeight}" OverviewHeight="{TemplateBinding OverviewHeight}" 
+                                             OverviewWidth="{TemplateBinding OverviewWidth}" OverviewDefaultOpacity="{TemplateBinding OverviewDefaultOpacity}" 
+                                             OverviewVisibility="{TemplateBinding OverviewVisibility}">
+            <controls:SimpleGraphView x:Name="PART_SimpleGraphView" ItemsSource="{Binding Items}" BorderThickness="0"/>
+            <xzoomandpan:TooledZoomAndPanControl.OverviewContent>
+                <controls:SimpleGraphView x:Name="PART_Overview" ItemsSource="{Binding Items}" IsReadOnly="true" />
+            </xzoomandpan:TooledZoomAndPanControl.OverviewContent>
+        </xzoomandpan:TooledZoomAndPanControl>
+    </ControlTemplate>
+
+    <!-- SelectionBox style. -->
+    <Style TargetType="{x:Type controls:GraphView}">
+        <Setter Property="Template" Value="{StaticResource GraphViewTemplate}" />
     </Style>
 
 </ResourceDictionary>
