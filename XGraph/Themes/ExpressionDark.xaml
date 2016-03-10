@@ -31,7 +31,7 @@
                     <Canvas x:Name="PART_SelectionBoxCanvas" >
                         <controls:SelectionBox />
                     </Canvas>
-                    <Border x:Name="INNER_IsReadOnlyLayer" Background="{StaticResource GraphView_IsReadOnlyLayer_Background_Brush}" Opacity="0.3" Visibility="Collapsed" />
+                    <Border x:Name="INNER_IsReadOnlyLayer" Background="{StaticResource GraphView_IsReadOnlyLayer_Background_Brush}" Opacity="0.1" Visibility="Collapsed" />
                 </Grid>
             </Border>
         </Grid>
@@ -337,18 +337,18 @@
                     </VisualState>
                 </VisualStateGroup>
             </VisualStateManager.VisualStateGroups>
-            <controls:ConnectionRenderer x:Name="INNER_Background" From="{Binding OutputConnector.Position, RelativeSource={RelativeSource TemplatedParent}}" To="{Binding InputConnector.Position, RelativeSource={RelativeSource TemplatedParent}}" Stroke="Transparent" StrokeThickness="11" />
-            <controls:ConnectionRenderer x:Name="INNER_SelectionHaloUp" From="{Binding OutputConnector.Position, RelativeSource={RelativeSource TemplatedParent}}" To="{Binding InputConnector.Position, RelativeSource={RelativeSource TemplatedParent}}" Stroke="{StaticResource Selection_Border_Brush}" Opacity="0.0" StrokeDashArray="3 2">
+            <controls:ConnectionRenderer x:Name="INNER_Background" From="{Binding RelativeFrom, RelativeSource={RelativeSource TemplatedParent}}" To="{Binding RelativeTo, RelativeSource={RelativeSource TemplatedParent}}" Stroke="Transparent" StrokeThickness="11" />
+            <controls:ConnectionRenderer x:Name="INNER_SelectionHaloUp" From="{Binding RelativeFrom, RelativeSource={RelativeSource TemplatedParent}}" To="{Binding RelativeTo, RelativeSource={RelativeSource TemplatedParent}}" Stroke="{StaticResource Selection_Border_Brush}" Opacity="0.0" StrokeDashArray="3 2">
                 <controls:ConnectionRenderer.RenderTransform>
                     <TranslateTransform Y="2" />
                 </controls:ConnectionRenderer.RenderTransform>
             </controls:ConnectionRenderer>
-            <controls:ConnectionRenderer x:Name="INNER_SelectionHaloDown" From="{Binding OutputConnector.Position, RelativeSource={RelativeSource TemplatedParent}}" To="{Binding InputConnector.Position, RelativeSource={RelativeSource TemplatedParent}}" Stroke="{StaticResource Selection_Border_Brush}" Opacity="0.0" StrokeDashArray="3 2">
+            <controls:ConnectionRenderer x:Name="INNER_SelectionHaloDown" From="{Binding RelativeFrom, RelativeSource={RelativeSource TemplatedParent}}" To="{Binding RelativeTo, RelativeSource={RelativeSource TemplatedParent}}" Stroke="{StaticResource Selection_Border_Brush}" Opacity="0.0" StrokeDashArray="3 2">
                 <controls:ConnectionRenderer.RenderTransform>
                     <TranslateTransform Y="-2" />
                 </controls:ConnectionRenderer.RenderTransform>
             </controls:ConnectionRenderer>
-            <controls:ConnectionRenderer x:Name="INNER_Connection" From="{Binding OutputConnector.Position, RelativeSource={RelativeSource TemplatedParent}}" To="{Binding InputConnector.Position, RelativeSource={RelativeSource TemplatedParent}}" Stroke="{TemplateBinding Background}" />
+            <controls:ConnectionRenderer x:Name="INNER_Connection" From="{Binding RelativeFrom, RelativeSource={RelativeSource TemplatedParent}}" To="{Binding RelativeTo, RelativeSource={RelativeSource TemplatedParent}}" Stroke="{TemplateBinding Background}" />
         </Grid>
     </ControlTemplate>
     

@@ -234,6 +234,7 @@ namespace XGraph.Behaviors
                 AGraphItemContainer lContainer = this.mParentView.GetContainerForViewModel(lItem);
                 if (lContainer != null)
                 {
+
                     if (lSelectionRect.Contains(lContainer.BoundingBox))
                     {
                         this.mParentView.SelectedItems.Add(lItem);

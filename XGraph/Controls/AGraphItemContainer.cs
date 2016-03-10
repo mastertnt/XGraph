@@ -42,7 +42,7 @@ namespace XGraph.Controls
         /// <summary>
         /// Gets the bounding box of this container.
         /// </summary>
-        public virtual Rect BoundingBox
+        public Rect BoundingBox
         {
             get
             {
@@ -86,6 +86,20 @@ namespace XGraph.Controls
             else
             {
                 VisualStateManager.GoToState(this, "Unselected", true);
+            }
+        }
+
+        /// <summary>
+        /// Sets the position of the container in the parent canvas.
+        /// </summary>
+        /// <param name="pPos">The container position.</param>
+        public void SetCanvasPosition(Point pPos)
+        {
+            GraphItem lParentGraphItem = this.FindVisualParent<GraphItem>();
+            if (lParentGraphItem != null)
+            {
+                lParentGraphItem.PosX = pPos.X;
+                lParentGraphItem.PosY = pPos.Y;
             }
         }
 

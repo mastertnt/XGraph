@@ -28,6 +28,16 @@ namespace XGraph.Controls
         /// </summary>
         public static readonly DependencyProperty InputConnectorProperty = DependencyProperty.Register("InputConnector", typeof(InputConnector), typeof(Connection), new FrameworkPropertyMetadata(null));
 
+        /// <summary>
+        /// Identifies the RelativeFrom dependency property.
+        /// </summary>
+        public static readonly DependencyProperty RelativeFromProperty = DependencyProperty.Register("RelativeFrom", typeof(Point), typeof(Connection), new FrameworkPropertyMetadata(new Point()));
+
+        /// <summary>
+        /// Identifies the RelativeTo dependency property.
+        /// </summary>
+        public static readonly DependencyProperty RelativeToProperty = DependencyProperty.Register("RelativeTo", typeof(Point), typeof(Connection), new FrameworkPropertyMetadata(new Point()));
+
         #endregion // Dependencies.
 
         #region Constructors
@@ -37,8 +47,7 @@ namespace XGraph.Controls
         /// </summary>
         static Connection()
         {
-            // set the key to reference the style for this control
-            FrameworkElement.DefaultStyleKeyProperty.OverrideMetadata(typeof(Connection), new FrameworkPropertyMetadata(typeof(Connection)));
+            Connection.DefaultStyleKeyProperty.OverrideMetadata(typeof(Connection), new FrameworkPropertyMetadata(typeof(Connection)));
         }
 
         #endregion // Constructors.
@@ -76,21 +85,32 @@ namespace XGraph.Controls
         }
 
         /// <summary>
-        /// Gets the bounding box of this container.
+        /// Gets or sets the initiale position of the connection relative to this control bounding box.
         /// </summary>
-        public override Rect BoundingBox
+        public Point RelativeFrom
         {
             get
             {
-                Point lP1 = this.OutputConnector.Position;
-                Point lP2 = this.InputConnector.Position;
+                return (Point)this.GetValue(RelativeFromProperty);
+            }
+            set
+            {
+                this.SetValue(RelativeFromProperty, value);
+            }
+        }
 
-                double lX = Math.Min(lP1.X, lP2.X);
-                double lY = Math.Min(lP1.Y, lP2.Y);
-                double lWidth = Math.Abs(lP1.X - lP2.X);
-                double lHeight = Math.Abs(lP1.Y - lP2.Y);
-
-                return new Rect(lX, lY, lWidth, lHeight);
+        /// <summary>
+        /// Gets or sets the final position of the connection relative to this control bounding box.
+        /// </summary>
+        public Point RelativeTo
+        {
+            get
+            {
+                return (Point)this.GetValue(RelativeToProperty);
+            }
+            set
+            {
+                this.SetValue(RelativeToProperty, value);
             }
         }
 
@@ -115,6 +135,9 @@ namespace XGraph.Controls
                 // Unreferencing the connectors to avoid memory leaks.
                 this.OutputConnector = null;
                 this.InputConnector = null;
+
+                this.OutputConnector.PositionChanged -= this.OnConnectorPositionChanged;
+                this.InputConnector.PositionChanged -= this.OnConnectorPositionChanged;
             }
             else
             {
@@ -129,6 +152,14 @@ namespace XGraph.Controls
                         if (lOutputPort != null)
                         {
                             this.OutputConnector = lOutputPort.Connector as OutputConnector;
+                            if (this.OutputConnector != null)
+                            {
+                                this.OutputConnector.PositionChanged += this.OnConnectorPositionChanged;
+                            }
+                            else
+                            {
+                                this.OutputConnector.PositionChanged -= this.OnConnectorPositionChanged;
+                            }
                         }
                     }
 
@@ -139,10 +170,126 @@ namespace XGraph.Controls
                         if (lInputPort != null)
                         {
                             this.InputConnector = lInputPort.Connector as InputConnector;
+                            if (this.InputConnector != null)
+                            {
+                                this.InputConnector.PositionChanged += this.OnConnectorPositionChanged;
+                            }
+                            else
+                            {
+                                this.InputConnector.PositionChanged -= this.OnConnectorPositionChanged;
+                            }
                         }
                     }
                 }
             }
+
+            this.UpdateRendering();
+        }
+
+        /// <summary>
+        /// Computes the bounding of the connection using the connectors positions.
+        /// </summary>
+        /// <returns>The computed bounding box.</returns>
+        private Rect ComputeBoundingBox()
+        {
+            if (this.OutputConnector != null && this.InputConnector != null)
+            {
+                Point lStartPos = this.OutputConnector.Position;
+                Point lEndPos = this.InputConnector.Position;
+
+                double lX = Math.Min(lStartPos.X, lEndPos.X);
+                double lY = Math.Min(lStartPos.Y, lEndPos.Y);
+                double lWidth = Math.Abs(lStartPos.X - lEndPos.X);
+                double lHeight = Math.Abs(lStartPos.Y - lEndPos.Y);
+
+                return new Rect(lX, lY, lWidth, lHeight);
+            }
+
+            return new Rect();
+        }
+
+        /// <summary>
+        /// Updates the position and size of the control.
+        /// </summary>
+        /// <param name="pNewBounding">The bounding box to tke in account.</param>
+        private void UpdateBoundingBox(Rect pNewBounding)
+        {
+            this.SetCanvasPosition(pNewBounding.TopLeft);
+            this.Width = pNewBounding.Width;
+            this.Height = pNewBounding.Height;
+        }
+
+        /// <summary>
+        /// Updates the relative position of the connection limits using the new bounding.
+        /// </summary>
+        /// <param name="pNewBounding">The bounding box to tke in account.</param>
+        private void UpdateRelativePos(Rect pNewBounding)
+        {
+            if (this.OutputConnector != null && this.InputConnector != null)
+            {
+                if (this.OutputConnector.Position.X <= this.InputConnector.Position.X)
+                {
+                    if (this.OutputConnector.Position == pNewBounding.TopLeft)
+                    {
+                        this.RelativeFrom = new Point(0.0, 0.0);
+                    }
+                    else
+                    {
+                        this.RelativeFrom = new Point(0.0, pNewBounding.Height);
+                    }
+
+                    if (this.InputConnector.Position == pNewBounding.TopRight)
+                    {
+                        this.RelativeTo = new Point(pNewBounding.Width, 0.0);
+                    }
+                    else
+                    {
+                        this.RelativeTo = new Point(pNewBounding.Width, pNewBounding.Height);
+                    }
+                }
+                else
+                {
+                    if (this.InputConnector.Position == pNewBounding.TopLeft)
+                    {
+                        this.RelativeTo = new Point(0.0, 0.0);
+                    }
+                    else
+                    {
+                        this.RelativeTo = new Point(0.0, pNewBounding.Height);
+                    }
+
+                    if (this.OutputConnector.Position == pNewBounding.TopRight)
+                    {
+                        this.RelativeFrom = new Point(pNewBounding.Width, 0.0);
+                    }
+                    else
+                    {
+                        this.RelativeFrom = new Point(pNewBounding.Width, pNewBounding.Height);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Delegate called when one of the connector position is modified.
+        /// </summary>
+        /// <param name="pOldPos">The old connector position.</param>
+        /// <param name="pNewPos">The new connector position.</param>
+        private void OnConnectorPositionChanged(Point pOldPos, Point pNewPos)
+        {
+            this.UpdateRendering();
+        }
+
+        private void UpdateRendering()
+        {
+            // Computes the new bounding box.
+            Rect lBoundingBox = this.ComputeBoundingBox();
+
+            // Updating it.
+            this.UpdateBoundingBox(lBoundingBox);
+
+            // Updating the relative position of the connection rendering.
+            this.UpdateRelativePos(lBoundingBox);
         }
 
         #endregion // Methods.
