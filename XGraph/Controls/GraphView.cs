@@ -3,12 +3,16 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using XGraph.ViewModels;
+using XZoomAndPan.Controls;
 
 namespace XGraph.Controls
 {
     /// <summary>
     /// Class defining a graph view having the zoom and pan capability.
     /// </summary>
+    [TemplatePart(Name = PART_ZOOM_AND_PAN_CONTROL, Type = typeof(TooledZoomAndPanControl))]
+    [TemplatePart(Name = PART_SIMPLE_GRAPH_VIEW, Type = typeof(SimpleGraphView))]
+    [TemplatePart(Name = PART_OVERVIEW, Type = typeof(SimpleGraphView))]
     public class GraphView : Control
     {
         #region Dependencies
@@ -55,8 +59,14 @@ namespace XGraph.Controls
         /// <summary>
         /// Name of the parts that have to be in the control template.
         /// </summary>
+        private const string PART_ZOOM_AND_PAN_CONTROL = "PART_ZoomAndPanControl";
         private const string PART_SIMPLE_GRAPH_VIEW = "PART_SimpleGraphView";
         private const string PART_OVERVIEW = "PART_Overview";
+
+        /// <summary>
+        /// Stores the inner zoom and pan control.
+        /// </summary>
+        private TooledZoomAndPanControl mZoomAndPanControl;
 
         /// <summary>
         /// Stores the inner simple graph view.
@@ -64,7 +74,7 @@ namespace XGraph.Controls
         private SimpleGraphView mSimpleGraphView;
 
         /// <summary>
-        /// Stores the overview.
+        /// Stores the inner overview.
         /// </summary>
         private SimpleGraphView mOverview;
 
@@ -212,10 +222,11 @@ namespace XGraph.Controls
             base.OnApplyTemplate();
 
             // Getting the parts of the control.
+            this.mZoomAndPanControl = this.GetTemplateChild(PART_ZOOM_AND_PAN_CONTROL) as TooledZoomAndPanControl;
             this.mSimpleGraphView = this.GetTemplateChild(PART_SIMPLE_GRAPH_VIEW) as SimpleGraphView;
             this.mOverview = this.GetTemplateChild(PART_OVERVIEW) as SimpleGraphView;
 
-            if (this.mSimpleGraphView == null || this.mOverview == null)
+            if (this.mZoomAndPanControl == null || this.mSimpleGraphView == null || this.mOverview == null)
             {
                 throw new Exception("GraphView control template not correctly defined.");
             }
@@ -235,6 +246,24 @@ namespace XGraph.Controls
                 this.SelectionChanged(pSender, pEventArgs);
             }
         }
+
+        /// <summary>
+        /// Maps the screen position to the corresponding position in the graph.
+        /// </summary>
+        /// <param name="pScreenPos">The position in screen coordinates.</param>
+        /// <param name="pGraphPos">The position in content coordinates, taking in account the zoom.</param>
+        /// <returns>True if the position is in the content, false otherwise. The returned pGraphPos is then (-1, -1).</returns>
+        public bool MapToGraph(Point pScreenPos, out Point pGraphPos)
+        {
+            if (this.mZoomAndPanControl != null)
+            {
+                return this.mZoomAndPanControl.MapToContent(pScreenPos, out pGraphPos);
+            }
+
+            pGraphPos = new Point(-1.0, -1.0);
+            return false;
+        }
+        
 
         #endregion // Methods.
     }

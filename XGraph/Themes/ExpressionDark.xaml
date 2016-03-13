@@ -388,10 +388,10 @@
 
     <!-- GraphView template. -->
     <ControlTemplate x:Key="GraphViewTemplate" TargetType="{x:Type controls:GraphView}">
-        <xzoomandpan:TooledZoomAndPanControl DataContext="{TemplateBinding DataContext}" ContentWidth="{TemplateBinding GraphWidth}" 
-                                             ContentHeight="{TemplateBinding GraphHeight}" OverviewHeight="{TemplateBinding OverviewHeight}" 
-                                             OverviewWidth="{TemplateBinding OverviewWidth}" OverviewDefaultOpacity="{TemplateBinding OverviewDefaultOpacity}" 
-                                             OverviewVisibility="{TemplateBinding OverviewVisibility}"
+        <xzoomandpan:TooledZoomAndPanControl x:Name="PART_ZoomAndPanControl" DataContext="{TemplateBinding DataContext}" 
+                                             ContentWidth="{TemplateBinding GraphWidth}" ContentHeight="{TemplateBinding GraphHeight}" 
+                                             OverviewHeight="{TemplateBinding OverviewHeight}" OverviewWidth="{TemplateBinding OverviewWidth}" 
+                                             OverviewDefaultOpacity="{TemplateBinding OverviewDefaultOpacity}" OverviewVisibility="{TemplateBinding OverviewVisibility}"
                                              ContentScale="{Binding ViewScale, Mode=TwoWay}" ContentOffsetX="{Binding ViewOffsetX, Mode=TwoWay}" ContentOffsetY="{Binding ViewOffsetY, Mode=TwoWay}">
             <controls:SimpleGraphView x:Name="PART_SimpleGraphView" ItemsSource="{Binding Items}" BorderThickness="0"/>
             <xzoomandpan:TooledZoomAndPanControl.OverviewContent>
