@@ -48,7 +48,6 @@ namespace XGraph.Controls
 
         #region Methods
 
-
         /// <summary>
         /// This method is called each time the mouse is moved over the constrol.
         /// </summary>
@@ -57,29 +56,24 @@ namespace XGraph.Controls
         {
             base.OnMouseMove(pEventArgs);
 
-            AdornerLayeredCanvas lParentCanvas = this.FindVisualParent<AdornerLayeredCanvas>();
+            SimpleGraphView lParentView = this.FindVisualParent<SimpleGraphView>();
             if (this.mDragStartPoint.HasValue == false)
             {
-                if (lParentCanvas != null)
+                if (lParentView != null)
                 {
-                    // position relative to DesignerCanvas
-                    this.mDragStartPoint = pEventArgs.GetPosition(lParentCanvas);
+                    // Position relative to DesignerCanvas.
+                    this.mDragStartPoint = pEventArgs.GetPosition(lParentView);
                     pEventArgs.Handled = true;
                 }
             }
 
             if (this.mDragStartPoint.HasValue)
             {
-                // create connection adorner 
-                if (lParentCanvas != null)
+                // Create connection.
+                if (lParentView != null)
                 {
-                    AdornerLayer lLayer = lParentCanvas.AdornerLayer;
-                    if (lLayer != null)
-                    {
-                        ConnectingLineAdorner lConnectingLine = new ConnectingLineAdorner(lParentCanvas, this);
-                        lLayer.Add(lConnectingLine);
-                        pEventArgs.Handled = true;
-                    }
+                    lParentView.ConnectionCreationBehavior.StartCreation(this);
+                    pEventArgs.Handled = true;
                 }
             }
         }

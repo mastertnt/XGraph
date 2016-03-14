@@ -29,8 +29,9 @@
                     <ScrollViewer x:Name="INNER_ScrollViewer" Focusable="False" Padding="{TemplateBinding Padding}" Background="{TemplateBinding Background}" BorderBrush="Transparent" BorderThickness="0" KeyboardNavigation.TabNavigation="{TemplateBinding KeyboardNavigation.TabNavigation}" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
                         <ItemsPresenter />
                     </ScrollViewer>
-                    <Canvas x:Name="PART_SelectionBoxCanvas" >
+                    <Canvas x:Name="PART_InteractionCanvas">
                         <controls:SelectionBox />
+                        <controls:ConnectingLine />
                     </Canvas>
                     <Border x:Name="INNER_IsReadOnlyLayer" Background="{StaticResource GraphView_IsReadOnlyLayer_Background_Brush}" Opacity="0.1" Visibility="Collapsed" />
                 </Grid>
@@ -47,7 +48,7 @@
         <Setter Property ="ItemsPanel">
             <Setter.Value>
                 <ItemsPanelTemplate>
-                    <controls:AdornerLayeredCanvas x:Name="INNER_DrawingArea" Background="{StaticResource GraphView_Background_Brush}"/>
+                    <controls:AdornerLayeredCanvas x:Name="PART_DrawingArea" Background="{StaticResource GraphView_Background_Brush}"/>
                 </ItemsPanelTemplate>
             </Setter.Value>
         </Setter>

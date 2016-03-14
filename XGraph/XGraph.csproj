@@ -62,7 +62,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Behaviors\AGraphViewBehavior.cs" />
     <Compile Include="Behaviors\BoxSelectionBehavior.cs" />
+    <Compile Include="Behaviors\ConnectionCreationBehavior.cs" />
     <Compile Include="Controls\AdornerLayeredCanvas.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -74,7 +76,6 @@
     </Compile>
     <Compile Include="Controls\ConnectorsPresenter.cs" />
     <Compile Include="Controls\GraphItem.cs" />
-    <Compile Include="Controls\ConnectingLineAdorner.cs" />
     <Compile Include="Controls\Connection.cs" />
     <Compile Include="Controls\AConnector.cs" />
     <Compile Include="Controls\GraphView.cs" />

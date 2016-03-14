@@ -9,8 +9,8 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <StackPanel Orientation="Horizontal" Margin="3" >
-            <Button Content="Delete" Click="Delete_Button_Click" />
-            <ToggleButton x:Name="mIsActiveButton" Content="IsActive" Click="IsActive_Button_Click" />
+            <Button Content="Delete" Click="OnDeleteButtonClicked" />
+            <ToggleButton x:Name="mIsActiveButton" Content="IsActive" Click="OnIsActiveButtonClicked" />
         </StackPanel>
         <xgraph:GraphView x:Name="GraphView" Grid.Row="1" />
     </Grid>

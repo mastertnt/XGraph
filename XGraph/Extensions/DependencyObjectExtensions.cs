@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Media;
 
@@ -62,6 +63,41 @@ namespace XGraph.Extensions
                 // Use recursion to proceed with next level.
                 return lParentObject.InnerFindVisualParent<T>();
             }
+        }
+
+        /// <summary>
+        /// Tries to find the visual child having the given name and type.
+        /// </summary>
+        /// <typeparam name="T">The type of the child to find.</typeparam>
+        /// <param name="pThis">The child parent.</param>
+        /// <param name="pName">The name of the child.</param>
+        /// <returns>The child if found, null otherwise.</returns>
+        public static T FindVisualChild<T>(this FrameworkElement pThis, string pName)
+        {
+            T lFoundChild = default(T);
+
+            if (pThis != null)
+            {
+                int lChildCount = VisualTreeHelper.GetChildrenCount(pThis);
+                for (int i = 0; i < lChildCount; i++)
+                {
+                    FrameworkElement lChild = VisualTreeHelper.GetChild(pThis, i) as FrameworkElement;
+
+                    if (lChild.GetType() == typeof(T) && lChild.Name == pName)
+                    {
+                        lFoundChild = (T)Convert.ChangeType(lChild, typeof(T));
+                        break;
+                    }
+
+                    lFoundChild = lChild.FindVisualChild<T>(pName);
+                    if (lFoundChild != null)
+                    {
+                        break;
+                    }
+                }
+            }
+
+            return lFoundChild;
         }
 
         #endregion // Methods.

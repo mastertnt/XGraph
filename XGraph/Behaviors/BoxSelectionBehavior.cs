@@ -14,14 +14,9 @@ namespace XGraph.Behaviors
     /// <summary>
     /// Class handling the selection using a box in the graph view.
     /// </summary>
-    public class BoxSelectionBehavior
+    public class BoxSelectionBehavior : AGraphViewBehavior
     {
         #region Fields
-
-        /// <summary>
-        /// Stores the parent view.
-        /// </summary>
-        private SimpleGraphView mParentView;
 
         /// <summary>
         /// Stores the flag indicating if the left mouse button is down on the view, that is, not on one of its item.
@@ -45,26 +40,28 @@ namespace XGraph.Behaviors
         /// <summary>
         /// Initializes a new instance of the <see cref="BoxSelectionBehavior"/> class.
         /// </summary>
+        /// <param name="pParent">The behavior parent view.</param>
         /// <param name="pSelectionBoxCanvas">The canvas containing the box.</param>
         public BoxSelectionBehavior(SimpleGraphView pParent, Canvas pSelectionBoxCanvas)
+            : base(pParent)
         {
-            this.mParentView = pParent;
             this.SelectionBoxCanvas = pSelectionBoxCanvas;
             this.SelectionBoxCanvas.Visibility = Visibility.Collapsed;
+            this.SelectionBox.Visibility = Visibility.Collapsed;
 
             this.mIsLeftMouseButtonDownOnView = false;
             this.mIsDraggingSelectionBox = false;
             this.DragThreshold = 0.1;
 
             // Registering on the event used to draw the box.
-            this.mParentView.MouseDown += this.OnParentViewMouseDown;
-            this.mParentView.MouseMove += this.OnParentViewMouseMove;
-            this.mParentView.MouseUp += this.OnParentViewMouseUp;
+            this.ParentView.MouseDown += this.OnParentViewMouseDown;
+            this.ParentView.MouseMove += this.OnParentViewMouseMove;
+            this.ParentView.MouseUp += this.OnParentViewMouseUp;
         }
 
         #endregion // Constructors.
 
-        #region Fields
+        #region Properties
 
         /// <summary>
         /// Gets or sets the canvas in witch is diplayed the box used for multi selection.
@@ -95,7 +92,7 @@ namespace XGraph.Behaviors
             }
         }
 
-        #endregion // Fields.
+        #endregion // Properties.
 
         #region Methods
 
@@ -106,12 +103,12 @@ namespace XGraph.Behaviors
         /// <param name="pEventArgs">The event arguments.</param>
         private void OnParentViewMouseDown(object pSender, MouseButtonEventArgs pEventArgs)
         {
-            if (this.mParentView.IsReadOnly == false && pEventArgs.ChangedButton == MouseButton.Left)
+            if (this.ParentView.IsReadOnly == false && pEventArgs.ChangedButton == MouseButton.Left)
             {
                 this.mIsLeftMouseButtonDownOnView = true;
-                this.mOrigMouseDownPoint = pEventArgs.GetPosition(this.mParentView);
+                this.mOrigMouseDownPoint = pEventArgs.GetPosition(this.ParentView);
 
-                this.mParentView.CaptureMouse();
+                this.ParentView.CaptureMouse();
 
                 pEventArgs.Handled = true;
             }
@@ -127,7 +124,7 @@ namespace XGraph.Behaviors
             if (this.mIsDraggingSelectionBox)
             {
                 // Drag selection already initiated, handle drag selection in progress.
-                Point lCurMouseDownPoint = pEventArgs.GetPosition(this.mParentView);
+                Point lCurMouseDownPoint = pEventArgs.GetPosition(this.ParentView);
                 this.UpdateSelectionBox(this.mOrigMouseDownPoint, lCurMouseDownPoint);
 
                 pEventArgs.Handled = true;
@@ -135,7 +132,7 @@ namespace XGraph.Behaviors
             else if (this.mIsLeftMouseButtonDownOnView)
             {
                 // The user is left-dragging the mouse, but don't initiate drag selection until they have dragged past the threshold value.
-                Point lCurMouseDownPoint = pEventArgs.GetPosition(this.mParentView);
+                Point lCurMouseDownPoint = pEventArgs.GetPosition(this.ParentView);
                 Vector lDragDelta = lCurMouseDownPoint - this.mOrigMouseDownPoint;
                 double lDragDistance = Math.Abs(lDragDelta.Length);
                 if (lDragDistance > this.DragThreshold)
@@ -161,6 +158,7 @@ namespace XGraph.Behaviors
 
             // Showing the canvas and then the box.
             this.SelectionBoxCanvas.Visibility = Visibility.Visible;
+            this.SelectionBox.Visibility = Visibility.Visible;
         }
 
         /// <summary>
@@ -202,7 +200,7 @@ namespace XGraph.Behaviors
                 if (this.mIsLeftMouseButtonDownOnView)
                 {
                     this.mIsLeftMouseButtonDownOnView = false;
-                    this.mParentView.ReleaseMouseCapture();
+                    this.ParentView.ReleaseMouseCapture();
                 }
             }
         }
@@ -213,10 +211,11 @@ namespace XGraph.Behaviors
         private void ApplySelectionBox()
         {
             // Clear selection.
-            this.mParentView.SelectedItems.Clear();
+            this.ParentView.SelectedItems.Clear();
 
             // Hidding the canvas hosting the selection box.
             this.SelectionBoxCanvas.Visibility = Visibility.Collapsed;
+            this.SelectionBox.Visibility = Visibility.Collapsed;
 
             double lX = Canvas.GetLeft(this.SelectionBox);
             double lY = Canvas.GetTop(this.SelectionBox);
@@ -228,15 +227,15 @@ namespace XGraph.Behaviors
             lSelectionRect.Inflate(lWidth / 10, lHeight / 10);
 
             // Selecting the items contained in the selection rect.
-            foreach (IGraphItemViewModel lItem in this.mParentView.ItemsSource)
+            foreach (IGraphItemViewModel lItem in this.ParentView.ItemsSource)
             {
                 // Getting the corresponding container.
-                AGraphItemContainer lContainer = this.mParentView.GetContainerForViewModel(lItem);
+                AGraphItemContainer lContainer = this.ParentView.GetContainerForViewModel(lItem);
                 if (lContainer != null)
                 {
                     if (lSelectionRect.Contains(lContainer.BoundingBox))
                     {
-                        this.mParentView.SelectedItems.Add(lItem);
+                        this.ParentView.SelectedItems.Add(lItem);
                     }
                 }
             }

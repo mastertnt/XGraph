@@ -18,23 +18,31 @@ using XGraphTestApp;
 namespace XGraphTest
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Main window of the sample.
     /// </summary>
     public partial class MainWindow : Window
     {
+        #region Constructors
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MainWindow"/> class.
+        /// </summary>
         public MainWindow()
         {
-            InitializeComponent();
+            this.InitializeComponent();
 
-            GraphViewModel lGraph = this.CreateTypeGraph();
-            this.GraphView.DataContext = lGraph;
-            this.GraphView.SelectionChanged += GraphView_SelectionChanged;
+            this.GraphView.DataContext = this.CreateTypeGraph();
+            this.GraphView.SelectionChanged += this.OnGraphViewSelectionChanged;
         }
+
+        #endregion // Constructors.
+
+        #region Methods
 
         /// <summary>
         /// Creates the type graph.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The graph view model.</returns>
         public GraphViewModel CreateTypeGraph()
         {
             GraphViewModel lGraph = new GraphViewModel();
@@ -118,7 +126,12 @@ namespace XGraphTest
 
         }
 
-        private void Delete_Button_Click(object sender, RoutedEventArgs e)
+        /// <summary>
+        /// Delegate called when the delete button is clicked.
+        /// </summary>
+        /// <param name="pSender">The button sender.</param>
+        /// <param name="pEventArgs">The event arguments.</param>
+        private void OnDeleteButtonClicked(object pSender, RoutedEventArgs pEventArgs)
         {
             GraphViewModel lRootViewModel = this.GraphView.DataContext as GraphViewModel;
             foreach (IGraphItemViewModel lItem in this.GraphView.SelectedViewModels)
@@ -137,30 +150,27 @@ namespace XGraphTest
             }
         }
 
-        private void IsActive_Button_Click(object sender, RoutedEventArgs e)
+        /// <summary>
+        /// Delegate called when the is active button is clicked.
+        /// </summary>
+        /// <param name="pSender">The button sender.</param>
+        /// <param name="pEventArgs">The event arguments.</param>
+        private void OnIsActiveButtonClicked(object pSender, RoutedEventArgs pEventArgs)
         {
             GraphViewModel lRootViewModel = this.GraphView.DataContext as GraphViewModel;
             NodeViewModel lSelectedItem = this.GraphView.SelectedViewModels.OfType<NodeViewModel>().FirstOrDefault();
             if (lSelectedItem != null)
             {
                 lSelectedItem.IsActive = !lSelectedItem.IsActive;
-            }
-
-            //GraphViewModel lRootViewModel = this.GraphView.DataContext as GraphViewModel;
-            //NodeViewModel lSelectedItem = this.GraphView.SelectedItems.OfType<NodeViewModel>().FirstOrDefault();
-            //if (lSelectedItem != null)
-            //{
-            //    NodeView lNodeView = this.GraphView.GetContainerForViewModel<NodeViewModel, NodeView>(lSelectedItem);
-            //    if (lNodeView != null)
-            //    {
-            //        lNodeView.Background = Brushes.Red;
-            //    }
-            //}
-            
+            }            
         }
 
-
-        private void GraphView_SelectionChanged(object sender, SelectionChangedEventArgs pEventArgs)
+        /// <summary>
+        /// Delegate called when the selection changed.
+        /// </summary>
+        /// <param name="pSender"></param>
+        /// <param name="pEventArgs"></param>
+        private void OnGraphViewSelectionChanged(object pSender, SelectionChangedEventArgs pEventArgs)
         {
             NodeViewModel lSelectedItem = this.GraphView.SelectedViewModels.OfType<NodeViewModel>().FirstOrDefault();
             if (lSelectedItem != null)
@@ -175,5 +185,6 @@ namespace XGraphTest
             }
         }
 
+        #endregion // Methods.
     }
 }
