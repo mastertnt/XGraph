@@ -1,17 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using XGraph.Controls;
 using XGraph.ViewModels;
 using XGraphTestApp;
 
@@ -31,7 +21,7 @@ namespace XGraphTest
         {
             this.InitializeComponent();
 
-            this.GraphView.DataContext = this.CreateTypeGraph();
+            this.GraphView.DataContext = new GraphViewModel();
             this.GraphView.SelectionChanged += this.OnGraphViewSelectionChanged;
         }
 
@@ -124,6 +114,28 @@ namespace XGraphTest
             }
             return lNode;
 
+        }
+
+        /// <summary>
+        /// Delegate called when the "Add" button is clicked.
+        /// </summary>
+        /// <param name="pSender">The button sender.</param>
+        /// <param name="pEventArgs">The event arguments.</param>
+        private void OnNewButtonClicked(object pSender, RoutedEventArgs pEventArgs)
+        {
+            this.GraphView.DataContext = new GraphViewModel();
+        }
+
+        /// <summary>
+        /// Delegate called when the "Add" button is clicked.
+        /// </summary>
+        /// <param name="pSender">The button sender.</param>
+        /// <param name="pEventArgs">The event arguments.</param>
+        private void OnAddButtonClicked(object pSender, RoutedEventArgs pEventArgs)
+        {
+            GraphViewModel lRootViewModel = this.GraphView.DataContext as GraphViewModel;
+            NodeViewModel lNode1 = new TypeNodeViewModel(typeof(SampleClass1VeryTooMuchLong));
+            lRootViewModel.AddNode(lNode1);
         }
 
         /// <summary>

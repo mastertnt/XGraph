@@ -9,6 +9,8 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <StackPanel Orientation="Horizontal" Margin="3" >
+            <Button Content="New" Click="OnNewButtonClicked" />
+            <Button Content="Add" Click="OnAddButtonClicked" />
             <Button Content="Delete" Click="OnDeleteButtonClicked" />
             <ToggleButton x:Name="mIsActiveButton" Content="IsActive" Click="OnIsActiveButtonClicked" />
         </StackPanel>

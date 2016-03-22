@@ -163,9 +163,12 @@ namespace XGraph.Behaviors
                 ConnectionViewModel lConnectionViewModel = new ConnectionViewModel();
                 lConnectionViewModel.Output = lSourceViewModel;
                 lConnectionViewModel.Input = lTargetViewModel;
-
                 lGraphViewModel.AddConnection(lConnectionViewModel);
             }
+
+            // Forget the reference on connectors.
+            this.mSourceConnector = null;
+            this.mTargetConnector = null;
         }
 
         /// <summary>
