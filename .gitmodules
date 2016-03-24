@@ -1,0 +1,3 @@
+[submodule "SubModules/XRay"]
+	path = SubModules/XRay
+	url = https://github.com/mastertnt/XRay.git
