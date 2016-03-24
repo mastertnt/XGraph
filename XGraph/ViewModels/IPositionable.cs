@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace XGraph.ViewModels
+﻿namespace XGraph.ViewModels
 {
     /// <summary>
     /// Interface defining a positionable element.

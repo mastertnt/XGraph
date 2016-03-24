@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using XGraph.Controls;
 using XGraph.ViewModels;
-using XGraph.Extensions;
 
 namespace XGraph.Behaviors
 {

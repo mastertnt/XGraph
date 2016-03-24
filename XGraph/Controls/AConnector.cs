@@ -1,13 +1,8 @@
 ﻿using System;
-using System.Security.Cryptography.X509Certificates;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Documents;
-using System.Windows.Input;
 using PropertyChanged;
 using XGraph.Extensions;
-using XGraph.ViewModels;
-using System.Windows.Data;
 
 namespace XGraph.Controls
 {
