@@ -18,6 +18,7 @@
     <RestorePackages>true</RestorePackages>
   </PropertyGroup>
   <Import Project="..\Targets\XGraph.Output.Targets" />
+  <Import Project="..\Targets\XZoomAndPan.Targets" />
   <PropertyGroup>
     <StartupObject />
   </PropertyGroup>
@@ -39,9 +40,6 @@
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
-    <Reference Include="XZoomAndPan">
-      <HintPath>..\..\XRay\Build\Release_x86\XZoomAndPan.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Behaviors\AGraphViewBehavior.cs" />

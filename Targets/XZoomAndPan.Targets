@@ -1,0 +1,10 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Test" ToolsVersion="4.0">
+  <!-- XRay references. -->
+  <ItemGroup>
+	<Reference Include="XZoomAndPan, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>$(SolutionDir)..\XRay\Build\Release_x86</HintPath>
+	  <Private>False</Private>
+    </Reference>
+  </ItemGroup>
+</Project>
