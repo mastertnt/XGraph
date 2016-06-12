@@ -3,7 +3,7 @@
   <ItemGroup>
 	<Reference Include="XZoomAndPan, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>$(SolutionDir)..\XRay\Build\Release_x86</HintPath>
+      <HintPath>$(SolutionDir)..\XRay\Build\Release_x86\XZoomAndPan.dll</HintPath>
 	  <Private>False</Private>
     </Reference>
   </ItemGroup>
