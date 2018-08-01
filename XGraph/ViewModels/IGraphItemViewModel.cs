@@ -7,6 +7,8 @@ namespace XGraph.ViewModels
     /// </summary>
     public interface IGraphItemViewModel
     {
+        #region Properties
+
         /// <summary>
         /// Gets the style to apply to the container.
         /// </summary>
@@ -18,13 +20,20 @@ namespace XGraph.ViewModels
         /// <summary>
         /// Gets or sets a value indicating whether this instance is selected.
         /// </summary>
-        /// <value>
-        /// <c>true</c> if this instance is selected; otherwise, <c>false</c>.
-        /// </value>
         bool IsSelected
         {
             get;
             set;
         }
+
+        /// <summary>
+        /// Gets the Z index ordering the associated control.
+        /// </summary>
+        int ZIndex
+        {
+            get;
+        }
+
+        #endregion // Properties.
     }
 }

@@ -27,7 +27,15 @@ namespace XGraph.Extensions
                 Adorner lAdornerParent = pThis.InnerFindVisualParent<Adorner>();
                 if (lAdornerParent != null)
                 {
-                    return lAdornerParent.AdornedElement.FindVisualParent<T>();
+                    T lAdornedElement = lAdornerParent.AdornedElement as T;
+                    if (lAdornedElement != null)
+                    {
+                        return lAdornedElement;
+                    }
+                    else
+                    {
+                        return lAdornerParent.AdornedElement.FindVisualParent<T>();
+                    }
                 }
             }
 

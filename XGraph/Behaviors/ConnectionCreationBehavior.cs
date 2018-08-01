@@ -148,7 +148,7 @@ namespace XGraph.Behaviors
             if (this.mSourceConnector != null && this.mTargetConnector != null)
             {
                 // Both defined means the connection can be created. Test have been made in the mouse move event handler.
-                GraphViewModel lGraphViewModel = this.ParentView.DataContext as GraphViewModel;
+                AGraphViewModel lGraphViewModel = this.ParentView.DataContext as AGraphViewModel;
                 if (lGraphViewModel == null)
                 {
                     return;
@@ -157,10 +157,8 @@ namespace XGraph.Behaviors
                 PortViewModel lSourceViewModel = this.mSourceConnector.ParentPort.Content as PortViewModel;
                 PortViewModel lTargetViewModel = this.mTargetConnector.ParentPort.Content as PortViewModel;
 
-                ConnectionViewModel lConnectionViewModel = new ConnectionViewModel();
-                lConnectionViewModel.Output = lSourceViewModel;
-                lConnectionViewModel.Input = lTargetViewModel;
-                lGraphViewModel.AddConnection(lConnectionViewModel);
+                // Requesting connection creation.
+                lGraphViewModel.RequestConnectionCreation(lSourceViewModel, lTargetViewModel);
             }
 
             // Forget the reference on connectors.

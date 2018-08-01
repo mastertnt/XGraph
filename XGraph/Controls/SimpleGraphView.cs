@@ -112,7 +112,6 @@ namespace XGraph.Controls
         /// Hits the control of the specified type at the given position.
         /// </summary>
         /// <typeparam name="TControlType">The control type.</typeparam>
-        /// <param name="pThis">The canvas.</param>
         /// <param name="pSourcePoint">The hit source point.</param>
         /// <returns>The found control if any.</returns>
         public TControlType HitControl<TControlType>(Point pSourcePoint) where TControlType : DependencyObject
@@ -133,7 +132,7 @@ namespace XGraph.Controls
         /// </returns>
         protected override DependencyObject GetContainerForItemOverride()
         {
-            return new GraphItem();
+            return new GraphItemContainer();
         }
 
         /// <summary>
@@ -141,9 +140,9 @@ namespace XGraph.Controls
         /// </summary>
         /// <param name="pItem">The item contained by the view.</param>
         /// <returns>The found view if any, null otherwise.</returns>
-        public AGraphItemContainer GetContainerForViewModel(IGraphItemViewModel pItem)
+        public AGraphItem GetContainerForViewModel(IGraphItemViewModel pItem)
         {
-            GraphItem lItemView = this.ItemContainerGenerator.ContainerFromItem(pItem) as GraphItem;
+            GraphItemContainer lItemView = this.ItemContainerGenerator.ContainerFromItem(pItem) as GraphItemContainer;
             if (lItemView != null)
             {
                 return lItemView.TemplateControl;
@@ -159,7 +158,7 @@ namespace XGraph.Controls
         /// <returns>The found view if any, null otherwise.</returns>
         public TContainer GetContainerForViewModel<TViewModel, TContainer>(TViewModel pItem) 
             where TViewModel : IGraphItemViewModel
-            where TContainer : AGraphItemContainer
+            where TContainer : AGraphItem
         {
             return this.GetContainerForViewModel(pItem) as TContainer;
         }

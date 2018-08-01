@@ -1,10 +1,10 @@
 ﻿using System;
 
-namespace XGraphTestApp
+namespace XGraph.TestApp
 {
-    class SampleClass1VeryTooMuchLong
+    class SampleClass
     {
-        public int OutputPortAsInt { get { return 0; } }
+        public int OutputPortAsInt { get { return 0;  } }
 
         public int BiPortAsInt { get; set; }
 

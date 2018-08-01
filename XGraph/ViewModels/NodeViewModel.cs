@@ -1,9 +1,10 @@
 ﻿using System.Windows;
 using PropertyChanged;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace XGraph.ViewModels
 {
-
     /// <summary>
     /// This class represents the view model of a graph node.
     /// A node is composed by :
@@ -27,6 +28,15 @@ namespace XGraph.ViewModels
         #endregion // Constructors.
 
         #region Properties
+
+        /// <summary>
+        /// Gets the parent graph.
+        /// </summary>
+        public AGraphViewModel ParentGraph
+        {
+            get;
+            internal set;
+        }
 
         /// <summary>
         /// Gets or sets the x.
@@ -92,13 +102,28 @@ namespace XGraph.ViewModels
         }
 
         /// <summary>
-        /// Gets the data template.
+        /// Gets or sets the icon.
         /// </summary>
-        public DataTemplate DataTemplate
+        public virtual ImageSource Icon
         {
             get
             {
-                return Themes.ExpressionDark.Instance["NodeViewDefaultDataTemplate"] as DataTemplate;
+                return Themes.ThemeManager.Instance.FindResource("Node_Icon") as BitmapImage;
+            }
+            set
+            {
+                // Nothing to do.
+            }
+        }
+
+        /// <summary>
+        /// Gets the data template.
+        /// </summary>
+        public virtual DataTemplate DataTemplate
+        {
+            get
+            {
+                return Themes.ThemeManager.Instance.FindResource("NodeViewDefaultDataTemplate") as DataTemplate;
             }
         }
 
@@ -109,7 +134,58 @@ namespace XGraph.ViewModels
         {
             get
             {
-                return Themes.ExpressionDark.Instance["GraphItemNodeViewDefaultStyleKey"] as Style;
+                return Themes.ThemeManager.Instance.FindResource("GraphItemNodeViewDefaultStyleKey") as Style;
+            }
+        }
+
+        /// <summary>
+        /// Gets the Z index ordering the associated control.
+        /// </summary>
+        public virtual int ZIndex
+        {
+            get
+            {
+                return 2;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the warnings of the node.
+        /// </summary>
+        public object Warnings
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Gets or sets the errors of the node.
+        /// </summary>
+        public object Errors
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Gets or sets the warnings data template.
+        /// </summary>
+        public virtual DataTemplate WarningsDataTemplate
+        {
+            get
+            {
+                return Themes.ThemeManager.Instance.FindResource("MessageIndicatorTooltipDefaultDataTemplate") as DataTemplate;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the errors data template.
+        /// </summary>
+        public virtual DataTemplate ErrorsDataTemplate
+        {
+            get
+            {
+                return Themes.ThemeManager.Instance.FindResource("MessageIndicatorTooltipDefaultDataTemplate") as DataTemplate;
             }
         }
 

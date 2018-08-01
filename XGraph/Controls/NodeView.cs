@@ -11,19 +11,39 @@ namespace XGraph.Controls
     /// Class defining a node in the graph view.
     /// </summary>
     [TemplatePart(Name = PART_PORT_CONTAINER, Type = typeof(PortContainer))]
-    public class NodeView : AGraphItemContainer
+    public class NodeView : AGraphItem
     {
         #region Dependencies
 
         /// <summary>
         /// Identifies the IsActive dependency property.
         /// </summary>
-        public static readonly DependencyProperty IsActiveProperty = DependencyProperty.Register("IsActive", typeof(bool), typeof(NodeView), new FrameworkPropertyMetadata(false, OnIsActiveChanged));
+        public static readonly DependencyProperty IsActiveProperty = DependencyProperty.Register("IsActive", typeof(bool), typeof(NodeView), new FrameworkPropertyMetadata(false));
 
         /// <summary>
-        /// Identifies the IsActiveBackground dependency property.
+        /// Identifies the HeaderBackground dependency property.
         /// </summary>
-        public static readonly DependencyProperty IsActiveBackgroundProperty = DependencyProperty.Register("IsActiveBackground", typeof(Brush), typeof(NodeView), new FrameworkPropertyMetadata(null));
+        public static readonly DependencyProperty HeaderBackgroundProperty = DependencyProperty.Register("HeaderBackground", typeof(Brush), typeof(NodeView), new FrameworkPropertyMetadata(null));
+
+        /// <summary>
+        /// Identifies the Warnings dependency property.
+        /// </summary>
+        public static readonly DependencyProperty WarningsProperty = DependencyProperty.Register("Warnings", typeof(object), typeof(NodeView), new FrameworkPropertyMetadata(null));
+
+        /// <summary>
+        /// Identifies the Errors dependency property.
+        /// </summary>
+        public static readonly DependencyProperty ErrorsProperty = DependencyProperty.Register("Errors", typeof(object), typeof(NodeView), new FrameworkPropertyMetadata(null));
+
+        /// <summary>
+        /// Identifies the WarningsDataTemplate dependency property.
+        /// </summary>
+        public static readonly DependencyProperty WarningsDataTemplateProperty = DependencyProperty.Register("WarningsDataTemplate", typeof(DataTemplate), typeof(NodeView), new FrameworkPropertyMetadata(null));
+
+        /// <summary>
+        /// Identifies the ErrorsDataTemplate dependency property.
+        /// </summary>
+        public static readonly DependencyProperty ErrorsDataTemplateProperty = DependencyProperty.Register("ErrorsDataTemplate", typeof(DataTemplate), typeof(NodeView), new FrameworkPropertyMetadata(null));
 
         #endregion // Dependencies.
 
@@ -39,16 +59,6 @@ namespace XGraph.Controls
         /// </summary>
         private PortContainer mInnerPortContainer;
 
-        /// <summary>
-        /// Stores the backup default background brush.
-        /// </summary>
-        private Brush mBackgroundBackup;
-
-        /// <summary>
-        /// Stores the flag indicating if the 
-        /// </summary>
-        private bool mIsBackgroundBackupUpdateLocked;
-
         #endregion // Fields.
 
         #region Constructors
@@ -59,7 +69,6 @@ namespace XGraph.Controls
         static NodeView()
         {
             NodeView.DefaultStyleKeyProperty.OverrideMetadata(typeof(NodeView), new FrameworkPropertyMetadata(typeof(NodeView)));
-            NodeView.BackgroundProperty.OverrideMetadata(typeof(NodeView), new FrameworkPropertyMetadata(null, OnBackgroundChanged));
         }
 
         /// <summary>
@@ -68,8 +77,6 @@ namespace XGraph.Controls
         public NodeView()
         {
             this.mInnerPortContainer = null;
-            this.mBackgroundBackup = null;
-            this.mIsBackgroundBackupUpdateLocked = false;
         }
 
         #endregion // Constructors.
@@ -92,17 +99,77 @@ namespace XGraph.Controls
         }
 
         /// <summary>
-        /// Gets or sets the brush to use as background when the node is active.
+        /// Gets or sets the brush to use as background in the header if the node has one.
         /// </summary>
-        public Brush IsActiveBackground
+        public Brush HeaderBackground
         {
             get
             {
-                return (Brush)this.GetValue(IsActiveBackgroundProperty);
+                return (Brush)this.GetValue(HeaderBackgroundProperty);
             }
             set
             {
-                this.SetValue(IsActiveBackgroundProperty, value);
+                this.SetValue(HeaderBackgroundProperty, value);
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the warnings list.
+        /// </summary>
+        public object Warnings
+        {
+            get
+            {
+                return this.GetValue(WarningsProperty);
+            }
+            set
+            {
+                this.SetValue(WarningsProperty, value);
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the errors list.
+        /// </summary>
+        public object Errors
+        {
+            get
+            {
+                return this.GetValue(ErrorsProperty);
+            }
+            set
+            {
+                this.SetValue(ErrorsProperty, value);
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the warnings list.
+        /// </summary>
+        public DataTemplate WarningsDataTemplate
+        {
+            get
+            {
+                return (DataTemplate)this.GetValue(WarningsProperty);
+            }
+            set
+            {
+                this.SetValue(WarningsProperty, value);
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the errors list.
+        /// </summary>
+        public DataTemplate ErrorsDataTemplate
+        {
+            get
+            {
+                return (DataTemplate)this.GetValue(ErrorsProperty);
+            }
+            set
+            {
+                this.SetValue(ErrorsProperty, value);
             }
         }
 
@@ -133,6 +200,30 @@ namespace XGraph.Controls
                 lIsActiveBinding.Source = lNewContent;
                 lIsActiveBinding.Mode = BindingMode.TwoWay;
                 this.SetBinding(NodeView.IsActiveProperty, lIsActiveBinding);
+
+                // Binding the Warnings property.
+                Binding lWarningsBinding = new Binding("Warnings");
+                lWarningsBinding.Source = lNewContent;
+                lWarningsBinding.Mode = BindingMode.TwoWay;
+                this.SetBinding(NodeView.WarningsProperty, lWarningsBinding);
+
+                // Binding the Errors property.
+                Binding lErrorsBinding = new Binding("Errors");
+                lErrorsBinding.Source = lNewContent;
+                lErrorsBinding.Mode = BindingMode.TwoWay;
+                this.SetBinding(NodeView.ErrorsProperty, lErrorsBinding);
+
+                // Binding the WarningsDataTemplate property.
+                Binding lWarningsDataTemplateBinding = new Binding("WarningsDataTemplate");
+                lWarningsDataTemplateBinding.Source = lNewContent;
+                lWarningsDataTemplateBinding.Mode = BindingMode.OneWay;
+                this.SetBinding(NodeView.WarningsDataTemplateProperty, lWarningsDataTemplateBinding);
+
+                // Binding the ErrorsDataTemplate property.
+                Binding lErrorsDataTemplateBinding = new Binding("ErrorsDataTemplate");
+                lErrorsDataTemplateBinding.Source = lNewContent;
+                lErrorsDataTemplateBinding.Mode = BindingMode.OneWay;
+                this.SetBinding(NodeView.ErrorsDataTemplateProperty, lErrorsDataTemplateBinding);
             }
         }
 
@@ -166,68 +257,6 @@ namespace XGraph.Controls
         public PortView GetContainerForPortViewModel(PortViewModel pItem)
         {
             return this.mInnerPortContainer.ItemContainerGenerator.ContainerFromItem(pItem) as PortView;
-        }
-
-        /// <summary>
-        /// Delegate called when the selection state changed.
-        /// </summary>
-        /// <param name="pObject">The modified control.</param>
-        /// <param name="pEventArgs">The event arguments.</param>
-        private static void OnIsActiveChanged(DependencyObject pObject, DependencyPropertyChangedEventArgs pEventArgs)
-        {
-            NodeView lNodeView = pObject as NodeView;
-            if (lNodeView != null)
-            {
-                lNodeView.UpdateVisualState();
-            }
-        }
-
-        /// <summary>
-        /// Updates the visual state of the node.
-        /// </summary>
-        protected override void UpdateVisualState()
-        {
-            base.UpdateVisualState();
-
-            // The active state only affect the background color.
-            if (this.IsActiveBackground != null)
-            {
-                if (this.IsActive)
-                {
-                    this.mIsBackgroundBackupUpdateLocked = true;
-                    this.Background = this.IsActiveBackground;
-                    this.mIsBackgroundBackupUpdateLocked = false;
-                }
-                else
-                {
-                    this.Background = this.mBackgroundBackup;
-                }
-            }
-        }
-
-        /// <summary>
-        /// Tries to backup the backgroud.
-        /// </summary>
-        private void TryToBackupBackground()
-        {
-            if (this.mIsBackgroundBackupUpdateLocked == false)
-            {
-                this.mBackgroundBackup = this.Background;
-            }
-        }
-
-        /// <summary>
-        /// Delegate called when the background brush changed.
-        /// </summary>
-        /// <param name="pObject">The modified control.</param>
-        /// <param name="pEventArgs">The event arguments.</param>
-        private static void OnBackgroundChanged(DependencyObject pObject, DependencyPropertyChangedEventArgs pEventArgs)
-        {
-            NodeView lContainer = pObject as NodeView;
-            if (lContainer != null)
-            {
-                lContainer.TryToBackupBackground();
-            }
         }
 
         #endregion // Methods.

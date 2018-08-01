@@ -1,5 +1,6 @@
 ﻿using PropertyChanged;
 using System.Windows;
+using System.Windows.Media;
 
 namespace XGraph.ViewModels
 {
@@ -9,14 +10,23 @@ namespace XGraph.ViewModels
     [ImplementPropertyChanged]
     public class ConnectionViewModel : IGraphItemViewModel
     {
+        #region Constructors
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ConnectionViewModel"/> class.
+        /// </summary>
+        public ConnectionViewModel()
+        {
+            this.Brush = new SolidColorBrush(Color.FromRgb(157, 157, 157));
+        }
+
+        #endregion // Constructors.
+
         #region Properties
 
         /// <summary>
         /// Gets or sets a value indicating whether this instance is selected.
         /// </summary>
-        /// <value>
-        /// <c>true</c> if this instance is selected; otherwise, <c>false</c>.
-        /// </value>
         public virtual bool IsSelected
         {
             get;
@@ -26,9 +36,6 @@ namespace XGraph.ViewModels
         /// <summary>
         /// Gets or sets a value indicating whether this instance is active.
         /// </summary>
-        /// <value>
-        ///   <c>true</c> if this instance is active; otherwise, <c>false</c>.
-        /// </value>
         public virtual bool IsActive
         {
             get;
@@ -38,9 +45,6 @@ namespace XGraph.ViewModels
         /// <summary>
         /// Gets or sets the input.
         /// </summary>
-        /// <value>
-        /// The input.
-        /// </value>
         public PortViewModel Input
         {
             get; 
@@ -50,9 +54,6 @@ namespace XGraph.ViewModels
         /// <summary>
         /// Gets or sets the output.
         /// </summary>
-        /// <value>
-        /// The output.
-        /// </value>
         public PortViewModel Output
         {
             get; 
@@ -66,8 +67,28 @@ namespace XGraph.ViewModels
         {
             get
             {
-                return Themes.ExpressionDark.Instance["GraphItemConnectionDefaultStyleKey"] as Style;
+                return Themes.ThemeManager.Instance.FindResource("GraphItemConnectionDefaultStyleKey") as Style;
             }
+        }
+
+        /// <summary>
+        /// Gets the Z index ordering the associated control.
+        /// </summary>
+        public virtual int ZIndex
+        {
+            get
+            {
+                return 1;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the brush used to color the connection.
+        /// </summary>
+        public virtual Brush Brush
+        {
+            get;
+            set;
         }
 
         #endregion // Properties.

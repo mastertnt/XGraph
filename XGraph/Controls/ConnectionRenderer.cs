@@ -91,11 +91,10 @@ namespace XGraph.Controls
             get
             {
                 // Computing the shortest path between the points.
-                List<Point> lPoints = this.From.GetShortestPath(this.To);
-                lPoints.RemoveAt(0);
+                List<Point> lPoints = this.From.GetShortestPath(this.To, 200);
 
                 // Building the path.
-                PathSegment[] lPath = { new BezierSegment(lPoints[0], lPoints[1], lPoints[2], true) };
+                PathSegment[] lPath = { new BezierSegment(lPoints[1], lPoints[2], lPoints[3], true)};
 
                 // Building the figure using the path.
                 PathFigure[] lFigures = { new PathFigure(this.From, lPath, false) };

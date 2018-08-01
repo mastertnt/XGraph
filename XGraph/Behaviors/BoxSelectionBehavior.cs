@@ -224,15 +224,18 @@ namespace XGraph.Behaviors
             lSelectionRect.Inflate(lWidth / 10, lHeight / 10);
 
             // Selecting the items contained in the selection rect.
-            foreach (IGraphItemViewModel lItem in this.ParentView.ItemsSource)
+            if (this.ParentView.ItemsSource != null)
             {
-                // Getting the corresponding container.
-                AGraphItemContainer lContainer = this.ParentView.GetContainerForViewModel(lItem);
-                if (lContainer != null)
+                foreach (IGraphItemViewModel lItem in this.ParentView.ItemsSource)
                 {
-                    if (lSelectionRect.Contains(lContainer.BoundingBox))
+                    // Getting the corresponding container.
+                    AGraphItem lContainer = this.ParentView.GetContainerForViewModel(lItem);
+                    if (lContainer != null)
                     {
-                        this.ParentView.SelectedItems.Add(lItem);
+                        if (lSelectionRect.Contains(lContainer.BoundingBox))
+                        {
+                            this.ParentView.SelectedItems.Add(lItem);
+                        }
                     }
                 }
             }

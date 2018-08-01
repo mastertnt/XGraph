@@ -9,7 +9,7 @@ namespace XGraph.Controls
     /// <summary>
     /// Class representing a port.
     /// </summary>
-    [TemplatePart(Name = PART_CONNECTORS_PRESENTER, Type = typeof(ConnectorsPresenter))]
+    [TemplatePart(Name = PART_CONNECTORS_PRESENTER, Type = typeof(AConnectorPresenter))]
     public class PortView : ContentControl
     {
         #region Dependencies
@@ -31,7 +31,7 @@ namespace XGraph.Controls
         /// <summary>
         /// Stores the connectors presenter.
         /// </summary>
-        private ConnectorsPresenter mConnectorsPresenter;
+        private AConnectorPresenter mConnectorPresenter;
 
         #endregion // Fields.
 
@@ -71,14 +71,7 @@ namespace XGraph.Controls
         {
             get
             {
-                if (this.Direction == PortDirection.Input)
-                {
-                    return this.mConnectorsPresenter.Adorner.InputConnector;
-                }
-                else
-                {
-                    return this.mConnectorsPresenter.Adorner.OutputConnector;
-                }
+                return this.mConnectorPresenter.Connector;
             }
         }
 
@@ -107,6 +100,10 @@ namespace XGraph.Controls
                 // Binding the direction.
                 Binding lDirectionBinding = new Binding("Direction") { Source = lNewContent, Mode = BindingMode.TwoWay };
                 this.SetBinding(PortView.DirectionProperty, lDirectionBinding);
+
+                // Binding the tooltip.
+                Binding lTooltipBinding = new Binding("ToolTip") { Source = lNewContent, Mode = BindingMode.TwoWay };
+                this.SetBinding(PortView.ToolTipProperty, lTooltipBinding);
             }
         }
 
@@ -118,20 +115,43 @@ namespace XGraph.Controls
             base.OnApplyTemplate();
 
             // Getting the parts of the control.
-            this.mConnectorsPresenter = this.GetTemplateChild(PART_CONNECTORS_PRESENTER) as ConnectorsPresenter;
+            this.mConnectorPresenter = this.GetTemplateChild(PART_CONNECTORS_PRESENTER) as AConnectorPresenter;
 
-            if (this.mConnectorsPresenter == null)
+            if (this.mConnectorPresenter == null)
             {
                 throw new Exception("PortView control template not correctly defined.");
             }
 
+            if (this.Connector != null)
+            {
+                this.CreateConnectorBindings();
+            }
+            else
+            {
+                this.mConnectorPresenter.TemplateApplied += this.OnConnectorPresenterTemplateApplied;
+            }
+        }
+
+        /// <summary>
+        /// Delegate called when the connector presenter control template is applied.
+        /// </summary>
+        private void OnConnectorPresenterTemplateApplied()
+        {
+            this.CreateConnectorBindings();
+        }
+
+        /// <summary>
+        /// Creates the bindings on the loaded connector.
+        /// </summary>
+        private void CreateConnectorBindings()
+        {
             // The content of the PortView is the PortViewModel.
             Binding lPositionBinding = new Binding("Position");
             lPositionBinding.Source = this.Content;
             lPositionBinding.Mode = BindingMode.OneWayToSource;
             this.Connector.SetBinding(AConnector.PositionProperty, lPositionBinding);
         }
-        
+
         #endregion // Methods.
     }
 }

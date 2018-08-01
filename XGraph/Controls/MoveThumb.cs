@@ -48,8 +48,7 @@ namespace XGraph.Controls
             Double lLeft = lItem.X;
             Double lTop = lItem.Y;
 
-            if
-                (Double.IsNaN(lLeft))
+            if (Double.IsNaN(lLeft))
             {
                 lItem.X = 0;
             }
@@ -58,8 +57,7 @@ namespace XGraph.Controls
                 lItem.X = lLeft + pEventArgs.HorizontalChange;
             }
 
-            if
-                (Double.IsNaN(lTop))
+            if (Double.IsNaN(lTop))
             {
                 lItem.Y = 0;
             }

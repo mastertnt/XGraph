@@ -40,25 +40,38 @@
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="XZoomAndPan, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\.\NuGet\InstalledPackages\XZoomAndPan.1.0.0\lib\net40\XZoomAndPan.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Behaviors\AGraphViewBehavior.cs" />
     <Compile Include="Behaviors\BoxSelectionBehavior.cs" />
     <Compile Include="Behaviors\ConnectionCreationBehavior.cs" />
+    <Compile Include="Behaviors\DragGraphItemBehavior.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Controls\AAdorner.cs" />
+    <Compile Include="Controls\AdornedInfosPresenter.cs" />
     <Compile Include="Controls\AdornerLayeredCanvas.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Controls\AGraphItemContainer.cs" />
+    <Compile Include="Controls\AGraphItem.cs" />
     <Compile Include="Controls\ConnectingLine.cs" />
     <Compile Include="Controls\ConnectionRenderer.cs" />
-    <Compile Include="Controls\ConnectorsAdorner.cs">
+    <Compile Include="Controls\ConnectorAdorner.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Controls\ConnectorsPresenter.cs" />
-    <Compile Include="Controls\GraphItem.cs" />
+    <Compile Include="Controls\AConnectorPresenter.cs" />
+    <Compile Include="Controls\AdornedConnectorPresenter.cs" />
+    <Compile Include="Controls\ConnectorPresenter.cs" />
+    <Compile Include="Controls\ErrorsIndicator.cs" />
+    <Compile Include="Controls\GraphItemContainer.cs" />
     <Compile Include="Controls\Connection.cs" />
     <Compile Include="Controls\AConnector.cs" />
     <Compile Include="Controls\GraphView.cs" />
+    <Compile Include="Controls\InfosAdorner.cs" />
     <Compile Include="Controls\InputConnector.cs" />
     <Compile Include="Controls\MoveThumb.cs" />
     <Compile Include="Controls\MoveThumbShape.cs" />
@@ -68,6 +81,9 @@
     <Compile Include="Controls\OutputConnector.cs" />
     <Compile Include="Controls\PortContainerPanel.cs" />
     <Compile Include="Controls\SelectionBox.cs" />
+    <Compile Include="Controls\WarningsIndicator.cs" />
+    <Compile Include="Converters\BooleanToInt32Converter.cs" />
+    <Compile Include="Converters\InfosTooltipContentToVisibilityConverter.cs" />
     <Compile Include="Converters\NodeViewPortsCountToBoundingPaddingConverter.cs" />
     <Compile Include="Converters\PortDirectionToHorizontalAlignmentConverter.cs" />
     <Compile Include="Extensions\FrameworkElementExtensions.cs" />
@@ -79,10 +95,11 @@
     <Compile Include="Converters\InputPortToVisibilityConverter.cs" />
     <Compile Include="Extensions\DependencyObjectExtensions.cs" />
     <Compile Include="Extensions\PointExtensions.cs" />
-    <Compile Include="Themes\ExpressionDark.cs" />
+    <Compile Include="Themes\Modern.cs" />
+    <Compile Include="Themes\ThemeManager.cs" />
     <Compile Include="ViewModels\ConnectionViewModel.cs" />
     <Compile Include="Controls\SimpleGraphView.cs" />
-    <Compile Include="ViewModels\GraphViewModel.cs" />
+    <Compile Include="ViewModels\AGraphViewModel.cs" />
     <Compile Include="ViewModels\PortViewModelCollection.cs" />
     <Page Include="Resources\All.xaml">
       <SubType>Designer</SubType>
@@ -108,7 +125,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Themes\ExpressionDark.xaml">
+    <Page Include="Themes\Modern.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -160,6 +177,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\Icons\InputPortIcon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Bindings\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

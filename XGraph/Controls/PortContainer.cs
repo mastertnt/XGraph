@@ -84,6 +84,16 @@ namespace XGraph.Controls
             }
         }
 
+        /// <summary>
+        /// Returns the node view containing the given view model.
+        /// </summary>
+        /// <param name="pItem">The item contained by the view.</param>
+        /// <returns>The found view if any, null otherwise.</returns>
+        public PortView GetContainerForViewModel(PortViewModel pItem)
+        {
+            return this.ItemContainerGenerator.ContainerFromItem(pItem) as PortView;
+        }
+
         #endregion // Methods.
     }
 }

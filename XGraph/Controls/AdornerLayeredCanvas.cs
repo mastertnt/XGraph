@@ -41,7 +41,6 @@ namespace XGraph.Controls
         /// Hits the control of the specified type in the given canvas at the given position.
         /// </summary>
         /// <typeparam name="TControlType">The control type.</typeparam>
-        /// <param name="pThis">The canvas.</param>
         /// <param name="pSourcePoint">The hit source point.</param>
         /// <returns>The found control if any.</returns>
         public TControlType HitControl<TControlType>(Point pSourcePoint) where TControlType : DependencyObject

@@ -7,8 +7,8 @@
     <ProjectGuid>{FE1A4D3D-1D1E-4A3B-8480-1BD9AB0BC6D2}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>XGraphTestApp</RootNamespace>
-    <AssemblyName>XGraphTestApp</AssemblyName>
+    <RootNamespace>XGraph.TestApp</RootNamespace>
+    <AssemblyName>XGraph.TestApp</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -48,6 +48,7 @@
     <Compile Include="SampleClass1.cs" />
     <Compile Include="TypeNodeViewModel.cs" />
     <Compile Include="SampleClass.cs" />
+    <Compile Include="ViewModels\GraphViewModel.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -87,6 +88,10 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\XGraph.Themes.ExpressionDark\XGraph.Themes.ExpressionDark.csproj">
+      <Project>{55b8ca16-753d-4063-b399-dbf9e9a9f4ef}</Project>
+      <Name>XGraph.Themes.ExpressionDark</Name>
+    </ProjectReference>
     <ProjectReference Include="..\XGraph\XGraph.csproj">
       <Project>{152277e0-4e7a-4586-bf49-05ac85ceafc1}</Project>
       <Name>XGraph</Name>

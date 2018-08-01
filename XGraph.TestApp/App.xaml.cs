@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace XGraphTest
+namespace XGraph.TestApp
 {
     /// <summary>
     /// Interaction logic for App.xaml

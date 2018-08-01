@@ -3,7 +3,7 @@
 
     <!-- Dictionary referencing the default theme for it to be loaded automatically by WPF -->
     <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary Source="/XGraph;Component/Themes/ExpressionDark.xaml" />
+        <ResourceDictionary Source="/XGraph;Component/Themes/Modern.xaml" />
     </ResourceDictionary.MergedDictionaries>
     
 </ResourceDictionary>

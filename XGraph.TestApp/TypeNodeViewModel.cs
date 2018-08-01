@@ -2,12 +2,12 @@
 using System.Reflection;
 using XGraph.ViewModels;
 
-namespace XGraphTestApp
+namespace XGraph.TestApp
 {
     /// <summary>
     /// This view model represents a type.
     /// </summary>
-    class TypeNodeViewModel : NodeViewModel
+    public class TypeNodeViewModel : NodeViewModel
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="TypeNodeViewModel"/> class.
@@ -40,6 +40,5 @@ namespace XGraphTestApp
                 this.Ports.Add(lPort);
             }
         }
-        
     }
 }

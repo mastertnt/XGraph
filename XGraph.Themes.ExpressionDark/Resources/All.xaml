@@ -1,0 +1,14 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    
+    <!-- Root dictionnary containing all the available resources -->
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="/XGraph.Themes.ExpressionDark;Component/Resources/Constants.xaml" />
+        <ResourceDictionary Source="/XGraph.Themes.ExpressionDark;Component/Resources/Brushes.xaml" />
+        <ResourceDictionary Source="/XGraph.Themes.ExpressionDark;Component/Resources/Fonts.xaml" />
+        <ResourceDictionary Source="/XGraph.Themes.ExpressionDark;Component/Resources/Converters.xaml" />
+        <ResourceDictionary Source="/XGraph.Themes.ExpressionDark;Component/Resources/Icons.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+
+</ResourceDictionary>

@@ -1,0 +1,513 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:xgraph="http://schemas.xgraph.com/winfx/2016/xaml"
+                    xmlns:xzoomandpan="http://schemas.xzoomandpan.com/winfx/2016/xaml"
+                    xmlns:markup="clr-namespace:XGraph.Extensions.Markup;assembly=XGraph"
+                    xmlns:behaviors="clr-namespace:XGraph.Behaviors;assembly=XGraph"
+                    xmlns:controls="clr-namespace:XGraph.Themes.ExpressionDark.Controls">
+
+    <!-- Including global resources -->
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="/XGraph.Themes.ExpressionDark;component/Resources/All.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+
+    <!-- SimpleGraphView template. -->
+    <ControlTemplate x:Key="SimpleGraphViewTemplate" TargetType="{x:Type xgraph:SimpleGraphView}">
+        <Grid x:Name="INNER_RootGrid">
+            <VisualStateManager.VisualStateGroups>
+                <VisualStateGroup x:Name="CommonStates">
+                    <VisualState x:Name="Normal" />
+                    <VisualState x:Name="IsReadOnly">
+                        <Storyboard>
+                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="INNER_IsReadOnlyLayer" Storyboard.TargetProperty="Visibility">
+                                <DiscreteObjectKeyFrame KeyTime="00:00:00" Value="{x:Static Visibility.Visible}"/>
+                            </ObjectAnimationUsingKeyFrames>
+                        </Storyboard>
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateManager.VisualStateGroups>
+            <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
+                <Grid>
+                    <ScrollViewer x:Name="INNER_ScrollViewer" Focusable="False" Padding="{TemplateBinding Padding}" Background="{TemplateBinding Background}" BorderBrush="Transparent" BorderThickness="0" KeyboardNavigation.TabNavigation="{TemplateBinding KeyboardNavigation.TabNavigation}" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+                        <ItemsPresenter />
+                    </ScrollViewer>
+                    <Canvas x:Name="PART_InteractionCanvas">
+                        <xgraph:SelectionBox />
+                        <xgraph:ConnectingLine />
+                    </Canvas>
+                    <Border x:Name="INNER_IsReadOnlyLayer" Background="{StaticResource GraphView_IsReadOnlyLayer_Background_Brush}" Opacity="0.1" Visibility="Collapsed" />
+                </Grid>
+            </Border>
+        </Grid>
+    </ControlTemplate>
+
+    <!-- SimpleGraphView style. -->
+    <Style TargetType="{x:Type xgraph:SimpleGraphView}" BasedOn="{StaticResource {x:Type ListBox}}">
+        <Setter Property="Template" Value="{StaticResource SimpleGraphViewTemplate}" />
+        <Setter Property="FontFamily" Value="{StaticResource Arial_N_FontFamily}" />
+        <Setter Property="TextOptions.TextRenderingMode" Value="ClearType" />
+        <Setter Property="TextOptions.TextFormattingMode" Value="Display" />
+        <Setter Property ="ItemsPanel">
+            <Setter.Value>
+                <ItemsPanelTemplate>
+                    <xgraph:AdornerLayeredCanvas x:Name="PART_DrawingArea" Background="{StaticResource GraphView_Background_Brush}"/>
+                </ItemsPanelTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- GraphItemContainer base style. -->
+    <Style x:Key="GraphItemContainerBaseStyleKey" TargetType="{x:Type xgraph:GraphItemContainer}" BasedOn="{StaticResource {x:Type ListBoxItem}}">
+        <Setter Property="Canvas.Left" Value="{Binding PosX, RelativeSource={RelativeSource Self}}"/>
+        <Setter Property="Canvas.Top" Value="{Binding PosY, RelativeSource={RelativeSource Self}}"/>
+        <Setter Property="Canvas.ZIndex" Value="{Binding ZIndex, RelativeSource={RelativeSource Self}}"/>
+        <Setter Property="KeyboardNavigation.TabNavigation" Value="None" />
+        <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+        <!-- 
+            Adding those two lines to prevent from binding error produced by the WPF listbox.
+            See http://stackoverflow.com/questions/3958173/listboxitem-produces-system-windows-data-error-4-binding-error.
+        -->
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="VerticalContentAlignment" Value="Stretch" />
+        <!-- 
+            End of the hook.
+        -->
+    </Style>
+
+    <!-- GraphItemContainer template when it contains a node. -->
+    <ControlTemplate x:Key="GraphItemContainerNodeViewTemplate" TargetType="{x:Type xgraph:GraphItemContainer}">
+        <Grid x:Name="INNER_RootGrid">
+            <VisualStateManager.VisualStateGroups>
+                <VisualStateGroup x:Name="CommonStates">
+                    <VisualState x:Name="Normal" />
+                </VisualStateGroup>
+                <VisualStateGroup x:Name="SelectionStates">
+                    <VisualState x:Name="Unselected">
+                        <Storyboard>
+                            <BooleanAnimationUsingKeyFrames Storyboard.TargetName="PART_TemplateControl" Storyboard.TargetProperty="IsSelected" >
+                                <DiscreteBooleanKeyFrame KeyTime="00:00:00" Value="False" />
+                            </BooleanAnimationUsingKeyFrames>
+                        </Storyboard>
+                    </VisualState>                    
+                    <VisualState x:Name="Selected">
+                        <Storyboard>
+                            <BooleanAnimationUsingKeyFrames Storyboard.TargetName="PART_TemplateControl" Storyboard.TargetProperty="IsSelected" >
+                                <DiscreteBooleanKeyFrame KeyTime="00:00:00" Value="True" />
+                            </BooleanAnimationUsingKeyFrames>
+                        </Storyboard>
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateManager.VisualStateGroups>
+            <xgraph:NodeView x:Name="PART_TemplateControl" Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}" behaviors:DragGraphItemBehavior.CanBeDragged="True" />
+        </Grid>        
+    </ControlTemplate>
+
+    <!-- GraphItemContainer style when it contains a node. -->
+    <Style x:Key="GraphItemNodeViewDefaultStyleKey" TargetType="{x:Type xgraph:GraphItemContainer}" BasedOn="{StaticResource GraphItemContainerBaseStyleKey}">
+        <Setter Property="Template" Value="{StaticResource GraphItemContainerNodeViewTemplate}" />
+    </Style>
+
+    <!-- GraphItemContainer template when it contains a connection. -->
+    <ControlTemplate x:Key="GraphItemContainerConnectionTemplate" TargetType="{x:Type xgraph:GraphItemContainer}">
+        <Grid x:Name="INNER_RootGrid">
+            <VisualStateManager.VisualStateGroups>
+                <VisualStateGroup x:Name="CommonStates">
+                    <VisualState x:Name="Normal" />
+                </VisualStateGroup>
+                <VisualStateGroup x:Name="SelectionStates">
+                    <VisualState x:Name="Unselected">
+                        <Storyboard>
+                            <BooleanAnimationUsingKeyFrames Storyboard.TargetName="PART_TemplateControl" Storyboard.TargetProperty="IsSelected" >
+                                <DiscreteBooleanKeyFrame KeyTime="00:00:00" Value="False" />
+                            </BooleanAnimationUsingKeyFrames>
+                        </Storyboard>
+                    </VisualState>
+                    <VisualState x:Name="Selected">
+                        <Storyboard>
+                            <BooleanAnimationUsingKeyFrames Storyboard.TargetName="PART_TemplateControl" Storyboard.TargetProperty="IsSelected" >
+                                <DiscreteBooleanKeyFrame KeyTime="00:00:00" Value="True" />
+                            </BooleanAnimationUsingKeyFrames>
+                        </Storyboard>
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateManager.VisualStateGroups>
+            <xgraph:Connection x:Name="PART_TemplateControl" Content="{TemplateBinding Content}" />
+        </Grid>
+    </ControlTemplate>
+
+    <!-- GraphItem style when it represents a connection. -->
+    <Style x:Key="GraphItemConnectionDefaultStyleKey" TargetType="{x:Type xgraph:GraphItemContainer}" BasedOn="{StaticResource GraphItemContainerBaseStyleKey}">
+        <Setter Property="Template" Value="{StaticResource GraphItemContainerConnectionTemplate}" />
+    </Style>
+
+    <!-- Storyboard to execute when a node is selected. -->
+    <Storyboard x:Key="NodeSelectedStoryboard">
+        <DoubleAnimation Storyboard.TargetName="INNER_SelectedShape" Storyboard.TargetProperty="(UIElement.Opacity)" To="1.0" >
+            <DoubleAnimation.EasingFunction>
+                <QuinticEase EasingMode="EaseOut" />
+            </DoubleAnimation.EasingFunction>
+        </DoubleAnimation>
+    </Storyboard>
+
+    <!-- Storyboard to execute when a node is unselected. -->
+    <Storyboard x:Key="NodeUnselectedStoryboard">
+        <DoubleAnimation Storyboard.TargetName="INNER_SelectedShape" Storyboard.TargetProperty="(UIElement.Opacity)" To="0.0" >
+            <DoubleAnimation.EasingFunction>
+                <QuinticEase EasingMode="EaseOut" />
+            </DoubleAnimation.EasingFunction>
+        </DoubleAnimation>
+    </Storyboard>
+
+    <!-- Storyboard to execute when the mouse is over a node. -->
+    <Storyboard x:Key="NodeMouseInStoryboard">
+        <DoubleAnimation Storyboard.TargetName="INNER_BoundingBox" Storyboard.TargetProperty="(UIElement.Opacity)" To="1.0" >
+            <DoubleAnimation.EasingFunction>
+                <QuinticEase EasingMode="EaseOut" />
+            </DoubleAnimation.EasingFunction>
+        </DoubleAnimation>
+    </Storyboard>
+
+    <!-- Storyboard to execute when the mouse goes out of a node. -->
+    <Storyboard x:Key="NodeMouseOutStoryboard">
+        <DoubleAnimation Storyboard.TargetName="INNER_BoundingBox" Storyboard.TargetProperty="(UIElement.Opacity)" To="{StaticResource NodeView_MouseOut_Opacity}" >
+            <DoubleAnimation.EasingFunction>
+                <QuinticEase EasingMode="EaseOut" />
+            </DoubleAnimation.EasingFunction>
+        </DoubleAnimation>
+    </Storyboard>
+
+    <!-- NodeView template. -->
+    <ControlTemplate x:Key="NodeViewTemplate" TargetType="{x:Type xgraph:NodeView}">
+        <Grid x:Name="INNER_BoundingBox" Background="Transparent" Opacity="{StaticResource NodeView_MouseOut_Opacity}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <controls:NodeViewShape x:Name="INNER_BackgroundShape" Fill="{TemplateBinding Background}" CornerRadius="{StaticResource NodeView_CornerRadius}" Grid.RowSpan="2" Margin="1"/>
+            <controls:NodeViewShape x:Name="INNER_SelectedShape" Fill="Transparent" CornerRadius="{StaticResource NodeView_CornerRadius}" Stroke="{StaticResource Selection_Border_Brush}" StrokeThickness="1" Grid.RowSpan="2" StrokeDashArray="3 2" Opacity="0.0" />
+            <Grid Grid.Row="0" >
+                <controls:NodeViewShape x:Name="INNER_HeaderBackgroundShape" Fill="{TemplateBinding HeaderBackground}" CornerRadius="{StaticResource NodeView_Header_CornerRadius}" Margin="1"/>
+                <ContentPresenter ContentTemplate="{TemplateBinding ContentTemplate}" />
+            </Grid>
+            <Grid Grid.Row="1" Margin="1,-1,1,1" >
+                <xgraph:PortContainer Grid.Row="1" x:Name="PART_PortContainer" Background="{TemplateBinding Background}" />
+            </Grid>
+            <xgraph:AdornedInfosPresenter x:Name="INNER_InfosPresenter" />
+        </Grid>
+        <ControlTemplate.Triggers>
+            <Trigger Property="IsSelected" Value="True">
+                <Trigger.EnterActions>
+                    <BeginStoryboard Storyboard="{StaticResource NodeSelectedStoryboard}" />
+                </Trigger.EnterActions>
+                <Trigger.ExitActions>
+                    <BeginStoryboard Storyboard="{StaticResource NodeUnselectedStoryboard}" />
+                </Trigger.ExitActions>
+            </Trigger>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Trigger.EnterActions>
+                    <BeginStoryboard Storyboard="{StaticResource NodeMouseInStoryboard}" />
+                </Trigger.EnterActions>
+                <Trigger.ExitActions>
+                    <BeginStoryboard Storyboard="{StaticResource NodeMouseOutStoryboard}" />
+                </Trigger.ExitActions>
+            </Trigger>
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
+
+    <!-- NodeView style. -->
+    <Style TargetType="{x:Type xgraph:NodeView}">
+        <Setter Property="Foreground" Value="{StaticResource NodeView_Foreground_Brush}" />
+        <Setter Property="Background" Value="{StaticResource NodeView_Background_Brush}" />
+        <Setter Property="HeaderBackground" Value="{StaticResource NodeView_Header_Background_Brush}" />
+        <Setter Property="Template" Value="{StaticResource NodeViewTemplate}" />
+        <Setter Property="Cursor" Value="SizeAll" />
+        <Style.Triggers>
+            <Trigger Property="IsActive" Value="True">
+                <Setter Property="HeaderBackground" Value="{StaticResource NodeView_IsActiveBackground_Brush}" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <!-- NodeView default data template for its content. -->
+    <DataTemplate x:Key="NodeViewDefaultDataTemplate">
+        <StackPanel Orientation="Horizontal">
+            <Image Source="{Binding Icon}" Width="16" Height="16" Margin="10,5,0,0" VerticalAlignment="Top" />
+            <StackPanel Margin="10,2">
+                <TextBlock Text="{Binding DisplayString}" HorizontalAlignment="Left" FontSize="{StaticResource NodeView_DisplayString_FontSize}" />
+                <TextBlock Text="{Binding Description}" HorizontalAlignment="Left" FontSize="{StaticResource NodeView_Description_FontSize}" />
+            </StackPanel>
+        </StackPanel>
+    </DataTemplate>
+
+    <!-- PortContainer template. -->
+    <ControlTemplate x:Key="PortContainerTemplate" TargetType="{x:Type xgraph:PortContainer}">
+        <xgraph:PortContainerPanel IsItemsHost="True" Background="{TemplateBinding Background}" LineWidth="{StaticResource PortContainer_Line_Width}" />
+    </ControlTemplate>
+
+    <!-- PortContainer style. -->
+    <Style TargetType="{x:Type xgraph:PortContainer}" BasedOn="{StaticResource {x:Type ItemsControl}}">
+        <Setter Property="Template" Value="{StaticResource PortContainerTemplate}" />
+        <Setter Property="Margin" Value="{StaticResource PortContainer_Margin}" />
+    </Style>
+
+    <!-- Input PortView template. -->
+    <ControlTemplate x:Key="InputPortViewTemplate" TargetType="{x:Type xgraph:PortView}">
+        <Grid Background="{TemplateBinding Background}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <xgraph:ConnectorPresenter x:Name="PART_ConnectorPresenter" Background="{TemplateBinding Background}" PortDirection="{TemplateBinding Direction}" Grid.Column="0" VerticalContentAlignment="Center" />
+            <ContentPresenter ContentTemplate="{TemplateBinding ContentTemplate}" VerticalAlignment="Center" HorizontalAlignment="{TemplateBinding Direction, Converter={StaticResource PortDirectionToHorizontalAlignmentConverter}}" Grid.Column="1" />           
+        </Grid>
+    </ControlTemplate>
+
+    <!-- Output PortView template. -->
+    <ControlTemplate x:Key="OutputPortViewTemplate" TargetType="{x:Type xgraph:PortView}">
+        <Grid Background="{TemplateBinding Background}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <ContentPresenter ContentTemplate="{TemplateBinding ContentTemplate}" VerticalAlignment="Center" HorizontalAlignment="{TemplateBinding Direction, Converter={StaticResource PortDirectionToHorizontalAlignmentConverter}}" Grid.Column="0" />
+            <xgraph:ConnectorPresenter x:Name="PART_ConnectorPresenter" Background="{TemplateBinding Background}" PortDirection="{TemplateBinding Direction}" Grid.Column="1" VerticalContentAlignment="Center" />
+        </Grid>
+    </ControlTemplate>
+
+    <!-- PortView style. -->
+    <Style TargetType="{x:Type xgraph:PortView}">
+        <Setter Property="Height" Value="{StaticResource PortView_Default_Height}" />
+        <Style.Triggers>
+            <Trigger Property="Direction" Value="Input">
+                <Setter Property="Template" Value="{StaticResource InputPortViewTemplate}" />
+            </Trigger>
+            <Trigger Property="Direction" Value="Output">
+                <Setter Property="Template" Value="{StaticResource OutputPortViewTemplate}" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <!-- Input ConnectorPresenter template. -->
+    <ControlTemplate x:Key="InputConnectorPresenterTemplate" TargetType="{x:Type xgraph:ConnectorPresenter}">
+        <xgraph:InputConnector x:Name="PART_Connector" />
+    </ControlTemplate>
+
+    <!-- Output ConnectorPresenter template. -->
+    <ControlTemplate x:Key="OutputConnectorPresenterTemplate" TargetType="{x:Type xgraph:ConnectorPresenter}">
+        <xgraph:OutputConnector x:Name="PART_Connector" />
+    </ControlTemplate>
+
+    <!-- ConnectorPresenter style. -->
+    <Style TargetType="{x:Type xgraph:ConnectorPresenter}">
+        <Style.Triggers>
+            <Trigger Property="PortDirection" Value="Input">
+                <Setter Property="Template" Value="{StaticResource InputConnectorPresenterTemplate}" />
+            </Trigger>
+            <Trigger Property="PortDirection" Value="Output">
+                <Setter Property="Template" Value="{StaticResource OutputConnectorPresenterTemplate}" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <!-- Input PortView default data template for its content. -->
+    <DataTemplate x:Key="InputPortViewDefaultDataTemplate">
+        <TextBlock Text="{Binding DisplayString}" VerticalAlignment="Center" FontSize="{StaticResource PortView_FontSize}" Margin="4,0,0,0" />
+    </DataTemplate>
+
+    <!-- Output PortView default data template for its content. -->
+    <DataTemplate x:Key="OutputPortViewDefaultDataTemplate">
+        <TextBlock Text="{Binding DisplayString}" VerticalAlignment="Center" FontSize="{StaticResource PortView_FontSize}" Margin="0,0,4,0" />
+    </DataTemplate>
+
+    <!-- Connector base template. -->
+    <ControlTemplate x:Key="ConnectorTemplate" TargetType="{x:Type xgraph:AConnector}">
+        <!-- DataContext is the PortViewModel. -->
+        <Image Source="{Binding Icon}" Width="16" Height="16" />
+    </ControlTemplate>
+    
+    <!-- Connector base style. -->
+    <Style x:Key="ConnectorBaseStyle" TargetType="{x:Type xgraph:AConnector}" >
+        <Setter Property="Template" Value="{StaticResource ConnectorTemplate}" />
+    </Style>
+
+    <!-- InputConnector style. -->
+    <Style TargetType="{x:Type xgraph:InputConnector}" BasedOn="{StaticResource ConnectorBaseStyle}" />
+           
+    <!-- OutputConnector style. -->
+    <Style TargetType="{x:Type xgraph:OutputConnector}" BasedOn="{StaticResource ConnectorBaseStyle}">
+        <Setter Property="Cursor" Value="Cross" />
+    </Style>
+
+    <!-- Connection template. -->
+    <ControlTemplate x:Key="ConnectionTemplate" TargetType="{x:Type xgraph:Connection}">
+        <Grid>
+            <VisualStateManager.VisualStateGroups>
+                <VisualStateGroup x:Name="CommonStates">
+                    <VisualState x:Name="Normal" />
+                </VisualStateGroup>
+                <VisualStateGroup x:Name="SelectionStates">
+                    <VisualStateGroup.Transitions>
+                        <VisualTransition GeneratedDuration="0:0:0.3" To="Selected"/>
+                        <VisualTransition From="Selected" GeneratedDuration="0:0:0.3"/>
+                    </VisualStateGroup.Transitions>
+                    <VisualState x:Name="Unselected" />
+                    <VisualState x:Name="Selected">
+                        <Storyboard>
+                            <DoubleAnimation Storyboard.TargetName="INNER_SelectionHaloUp" Storyboard.TargetProperty="(UIElement.Opacity)" To="1" />
+                            <DoubleAnimation Storyboard.TargetName="INNER_SelectionHaloDown" Storyboard.TargetProperty="(UIElement.Opacity)" To="1" />
+                        </Storyboard>
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateManager.VisualStateGroups>
+            <xgraph:ConnectionRenderer x:Name="INNER_Background" From="{Binding RelativeFrom, RelativeSource={RelativeSource TemplatedParent}}" To="{Binding RelativeTo, RelativeSource={RelativeSource TemplatedParent}}" Stroke="Transparent" StrokeThickness="11" />
+            <xgraph:ConnectionRenderer x:Name="INNER_SelectionHaloUp" From="{Binding RelativeFrom, RelativeSource={RelativeSource TemplatedParent}}" To="{Binding RelativeTo, RelativeSource={RelativeSource TemplatedParent}}" Stroke="{StaticResource Selection_Border_Brush}" Opacity="0.0" StrokeDashArray="3 2">
+                <xgraph:ConnectionRenderer.RenderTransform>
+                    <TranslateTransform Y="2" />
+                </xgraph:ConnectionRenderer.RenderTransform>
+            </xgraph:ConnectionRenderer>
+            <xgraph:ConnectionRenderer x:Name="INNER_SelectionHaloDown" From="{Binding RelativeFrom, RelativeSource={RelativeSource TemplatedParent}}" To="{Binding RelativeTo, RelativeSource={RelativeSource TemplatedParent}}" Stroke="{StaticResource Selection_Border_Brush}" Opacity="0.0" StrokeDashArray="3 2">
+                <xgraph:ConnectionRenderer.RenderTransform>
+                    <TranslateTransform Y="-2" />
+                </xgraph:ConnectionRenderer.RenderTransform>
+            </xgraph:ConnectionRenderer>
+            <xgraph:ConnectionRenderer x:Name="INNER_Connection" From="{Binding RelativeFrom, RelativeSource={RelativeSource TemplatedParent}}" To="{Binding RelativeTo, RelativeSource={RelativeSource TemplatedParent}}" Stroke="{TemplateBinding Background}" />
+        </Grid>
+    </ControlTemplate>
+    
+    <!-- Connection style. -->
+    <Style TargetType="{x:Type xgraph:Connection}" BasedOn="{StaticResource {x:Type ContentControl}}">
+        <Setter Property="Template" Value="{StaticResource ConnectionTemplate}" />
+        <Setter Property="LineWidth" Value="5" />
+        <Setter Property="Padding" Value="100" />
+    </Style>
+    
+    <!-- Connecting line template. -->
+    <ControlTemplate x:Key="ConnectingLineTemplate" TargetType="{x:Type xgraph:ConnectingLine}">
+        <xgraph:ConnectionRenderer x:Name="INNER_Line" From="{Binding From, RelativeSource={RelativeSource TemplatedParent}}" To="{Binding To, RelativeSource={RelativeSource TemplatedParent}}" Stroke="{TemplateBinding Background}" StrokeDashArray="3 2" />
+    </ControlTemplate>
+
+    <!-- Connecting line style. -->
+    <Style TargetType="{x:Type xgraph:ConnectingLine}">
+        <Setter Property="Template" Value="{StaticResource ConnectingLineTemplate}" />
+        <Setter Property="Background" Value="{StaticResource ConnectingLine_Background_Brush}" />
+    </Style>
+
+    <!-- SelectionBox template. -->
+    <ControlTemplate x:Key="SelectionBoxTemplate" TargetType="{x:Type xgraph:SelectionBox}">
+        <Grid x:Name="INNER_MainGrid">
+            <Rectangle x:Name="INNER_Border" StrokeDashArray="3 2" StrokeThickness="{TemplateBinding BorderThickness}" Stroke="{TemplateBinding BorderBrush}" />
+            <Rectangle x:Name="INNER_Fill" Margin="{TemplateBinding BorderThickness}" Fill="{TemplateBinding Background}" Opacity="0.2"/>
+        </Grid>
+    </ControlTemplate>
+
+    <!-- SelectionBox style. -->
+    <Style TargetType="{x:Type xgraph:SelectionBox}">
+        <Setter Property="Template" Value="{StaticResource SelectionBoxTemplate}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="BorderBrush" Value="{StaticResource Selection_Border_Brush}" />
+        <Setter Property="Background" Value="{StaticResource Selection_Background_Brush}" />
+    </Style>
+
+    <!-- GraphView template. -->
+    <ControlTemplate x:Key="GraphViewTemplate" TargetType="{x:Type xgraph:GraphView}">
+        <xzoomandpan:TooledZoomAndPanControl x:Name="PART_ZoomAndPanControl" DataContext="{TemplateBinding DataContext}" 
+                                             ContentWidth="{TemplateBinding GraphWidth}" ContentHeight="{TemplateBinding GraphHeight}" 
+                                             OverviewHeight="{TemplateBinding OverviewHeight}" OverviewWidth="{TemplateBinding OverviewWidth}" 
+                                             OverviewDefaultOpacity="{TemplateBinding OverviewDefaultOpacity}" OverviewVisibility="{TemplateBinding OverviewVisibility}"
+                                             ToolbarVisibility="{TemplateBinding ToolbarVisibility}"
+                                             ContentScale="{Binding ViewScale, Mode=TwoWay}" ContentOffsetX="{Binding ViewOffsetX, Mode=TwoWay}" ContentOffsetY="{Binding ViewOffsetY, Mode=TwoWay}">
+            <xgraph:SimpleGraphView x:Name="PART_SimpleGraphView" ItemsSource="{Binding Items}" BorderThickness="0" IsReadOnly="{TemplateBinding IsReadOnly}"/>
+            <xzoomandpan:TooledZoomAndPanControl.OverviewContent>
+                <xgraph:SimpleGraphView x:Name="PART_Overview" ItemsSource="{Binding Items}" IsReadOnly="true" />
+            </xzoomandpan:TooledZoomAndPanControl.OverviewContent>
+        </xzoomandpan:TooledZoomAndPanControl>
+    </ControlTemplate>
+
+    <!-- GraphView style. -->
+    <Style TargetType="{x:Type xgraph:GraphView}">
+        <Setter Property="Template" Value="{StaticResource GraphViewTemplate}" />
+    </Style>
+
+    <!-- Message indicator tooltip template. -->
+    <ControlTemplate x:Key="MessageIndicatorTooltipTemplate" TargetType="{x:Type ToolTip}">
+        <Grid>
+            <controls:InfosIndicatorTooltipShape CornerRadius="{StaticResource InfosIndicator_Tooltip_CornerRadius}" ArrowHeight="{StaticResource InfosIndicator_Tooltip_ArrowHeight}" Fill="{TemplateBinding Background}" />
+            <ContentPresenter Margin="5,9,5,5" Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}" />
+        </Grid>
+    </ControlTemplate>
+
+    <!-- Message indicator tooltip style. -->
+    <Style x:Key="MessageIndicatorTooltipStyle" TargetType="{x:Type ToolTip}">
+        <Setter Property="Template" Value="{StaticResource MessageIndicatorTooltipTemplate}" />
+        <Setter Property="ToolTipService.Placement" Value="Bottom" />
+        <Setter Property="ToolTipService.HorizontalOffset" Value="-8" />
+    </Style>
+
+    <!-- Message indicator tooltip default data template. -->
+    <DataTemplate x:Key="MessageIndicatorTooltipDefaultDataTemplate" >
+        <ItemsControl ItemsSource="{Binding}" FontSize="{StaticResource InfosIndicator_FontSize}">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <StackPanel Orientation="Vertical" />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding StringFormat=' - {0}'}" />
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+    </DataTemplate>
+
+    <!-- WarningsIndicator template. -->
+    <ControlTemplate x:Key="WarningsIndicatorTemplate" TargetType="{x:Type xgraph:WarningsIndicator}">
+        <Image Source="{StaticResource Warning_Icon}" Height="9" Width="9" >
+            <Image.ToolTip>
+                <ToolTip Style="{StaticResource MessageIndicatorTooltipStyle}" Content="{TemplateBinding Warnings}" ContentTemplate="{TemplateBinding WarningsDataTemplate}"
+                         Background="{StaticResource WarningsIndicatorTooltip_Background_Brush}" Foreground="{StaticResource WarningsIndicatorTooltip_Foreground_Brush}" />
+            </Image.ToolTip>
+        </Image>
+    </ControlTemplate>
+
+    <!-- WarningsIndicator style. -->
+    <Style TargetType="{x:Type xgraph:WarningsIndicator}">
+        <Setter Property="Template" Value="{StaticResource WarningsIndicatorTemplate}" />
+    </Style>
+
+    <!-- ErrorsIndicator template. -->
+    <ControlTemplate x:Key="ErrorsIndicatorTemplate" TargetType="{x:Type xgraph:ErrorsIndicator}">
+        <Image Source="{StaticResource Error_Icon}" Height="9" Width="9" >
+            <Image.ToolTip>
+                <ToolTip Style="{StaticResource MessageIndicatorTooltipStyle}" Content="{TemplateBinding Errors}" ContentTemplate="{TemplateBinding ErrorsDataTemplate}"
+                         Background="{StaticResource ErrorsIndicatorTooltip_Background_Brush}" Foreground="{StaticResource ErrorsIndicatorTooltip_Foreground_Brush}" />
+            </Image.ToolTip>
+        </Image>
+    </ControlTemplate>
+
+    <!-- ErrorsIndicator style. -->
+    <Style TargetType="{x:Type xgraph:ErrorsIndicator}">
+        <Setter Property="Template" Value="{StaticResource ErrorsIndicatorTemplate}" />
+    </Style>
+
+    <!-- Default tooltip template. -->
+    <ControlTemplate x:Key="TooltipTemplate" TargetType="{x:Type ToolTip}">
+        <Grid>
+            <controls:InfosIndicatorTooltipShape CornerRadius="{StaticResource Tooltip_CornerRadius}" ArrowHeight="{StaticResource Tooltip_ArrowHeight}" Fill="{TemplateBinding Background}" />
+            <ContentPresenter Margin="5" Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}" />
+        </Grid>
+    </ControlTemplate>
+
+    <!-- Default tooltip data template. -->
+    <DataTemplate x:Key="TooltipDataTemplate" >
+        <TextBlock Text="{Binding}" FontSize="{StaticResource Tooltip_FontSize}" />
+    </DataTemplate>
+    
+    <!-- Default tooltip style. -->
+    <Style TargetType="{x:Type ToolTip}" BasedOn="{StaticResource {x:Type ToolTip}}">
+        <Setter Property="Template" Value="{StaticResource TooltipTemplate}" />
+        <Setter Property="ContentTemplate" Value="{StaticResource TooltipDataTemplate}" />
+        <Setter Property="Background" Value="{StaticResource Tooltip_Background_Brush}" />
+        <Setter Property="Foreground" Value="{StaticResource Tooltip_Foreground_Brush}" />
+    </Style>
+
+</ResourceDictionary>

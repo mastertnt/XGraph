@@ -46,6 +46,16 @@ namespace XGraph.Controls
         /// Identifies the OverviewVisibility attached dependency property.
         /// </summary>
         public static readonly DependencyProperty OverviewVisibilityProperty = DependencyProperty.RegisterAttached("OverviewVisibility", typeof(Visibility), typeof(GraphView), new FrameworkPropertyMetadata(Visibility.Visible));
+        
+        /// <summary>
+        /// Identifies the ToolbarVisibility attached dependency property.
+        /// </summary>
+        public static readonly DependencyProperty ToolbarVisibilityProperty = DependencyProperty.RegisterAttached("ToolbarVisibility", typeof(Visibility), typeof(GraphView), new FrameworkPropertyMetadata(Visibility.Collapsed));
+        
+        /// <summary>
+        /// Identifies the IsReadOnly dependency property.
+        /// </summary>
+        public static readonly DependencyProperty IsReadOnlyProperty = DependencyProperty.Register("IsReadOnly", typeof(bool), typeof(GraphView), new FrameworkPropertyMetadata(false));
 
         #endregion // Dependencies.
 
@@ -118,7 +128,6 @@ namespace XGraph.Controls
                 return new IGraphItemViewModel[] { };
             }
         }
-
 
         /// <summary>
         /// Gets or sets the width of the content.
@@ -210,6 +219,36 @@ namespace XGraph.Controls
             }
         }
 
+        /// <summary>
+        /// Gets or sets the toolbar visibility.
+        /// </summary>
+        public Visibility ToolbarVisibility
+        {
+            get
+            {
+                return (Visibility)GetValue(ToolbarVisibilityProperty);
+            }
+            set
+            {
+                SetValue(ToolbarVisibilityProperty, value);
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the flag indicating if the view is read  only.
+        /// </summary>
+        public bool IsReadOnly
+        {
+            get
+            {
+                return (bool)this.GetValue(IsReadOnlyProperty);
+            }
+            set
+            {
+                this.SetValue(IsReadOnlyProperty, value);
+            }
+        }
+
         #endregion // Properties.
 
         #region Methods
@@ -264,6 +303,28 @@ namespace XGraph.Controls
             return false;
         }
         
+        /// <summary>
+        /// Zoom in/out centered on the viewport center.
+        /// </summary>
+        /// <param name="pNewScale">The new scale in percent [0;1].</param>
+        public void ZoomTo(double pNewScale)
+        {
+            if (this.mZoomAndPanControl != null)
+            {
+                this.mZoomAndPanControl.AnimatedZoomTo(pNewScale);
+            }
+        }
+
+        /// <summary>
+        /// Scale the content so that it fits completely in the control.
+        /// </summary>
+        public void ScaleToFit()
+        {
+            if (this.mZoomAndPanControl != null)
+            {
+                this.mZoomAndPanControl.AnimatedScaleToFit();
+            }
+        }
 
         #endregion // Methods.
     }

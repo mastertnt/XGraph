@@ -1,0 +1,27 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+
+    <CornerRadius x:Key="NodeView_CornerRadius">10</CornerRadius>
+    <CornerRadius x:Key="NodeView_Header_CornerRadius">10,10,0,0</CornerRadius>
+    <sys:Double x:Key="NodeView_MouseOut_Opacity">0.6</sys:Double>
+    <sys:Double x:Key="NodeView_DisplayString_FontSize">11</sys:Double>
+    <sys:Double x:Key="NodeView_Description_FontSize">9</sys:Double>
+
+    <sys:Double x:Key="PortView_Default_Height">16</sys:Double>
+    <sys:Double x:Key="PortView_FontSize">10</sys:Double>
+
+    <Thickness x:Key="PortContainer_Margin">5</Thickness>
+    <sys:Double x:Key="PortContainer_Line_Width">2.0</sys:Double>
+
+    <CornerRadius x:Key="InfosIndicator_Tooltip_CornerRadius">5</CornerRadius>
+    <sys:Double x:Key="InfosIndicator_Tooltip_ArrowHeight">6</sys:Double>
+
+    <sys:Double x:Key="InfosIndicator_FontSize">10</sys:Double>
+
+    <CornerRadius x:Key="Tooltip_CornerRadius">5</CornerRadius>
+    <sys:Double x:Key="Tooltip_ArrowHeight">0</sys:Double>
+
+    <sys:Double x:Key="Tooltip_FontSize">10</sys:Double>
+
+</ResourceDictionary>

@@ -14,24 +14,25 @@ namespace XGraph.Extensions
         /// </summary>
         /// <param name="pStart">The start point.</param>
         /// <param name="pEnd">The end point.</param>
-        /// <param name="The grid">The grid to consider.</param>
-        /// <returns></returns>
-        static public List<Point> GetShortestPath(this Point pStart, Point pEnd)
+        /// <param name="pPadding">The used padding.</param>
+        /// <returns>The path as list of points.</returns>
+        public static List<Point> GetShortestPath(this Point pStart, Point pEnd, double pPadding)
         {
             List<Point> lResult = new List<Point>();
 
             // First, look for the max between with and height.
             Double lHeight = Math.Abs(pEnd.Y - pStart.Y);
             Double lWidth = Math.Abs(pEnd.X - pStart.X);
+
+
             if
-                (lWidth > lHeight)
+                (lHeight < 100)
             {
                 if (pStart.X > pEnd.X)
                 {
-                    Double lNewX = pEnd.X + lWidth / 2.0;
                     lResult.Add(pStart);
-                    lResult.Add(new Point(lNewX, pStart.Y));
-                    lResult.Add(new Point(lNewX, pEnd.Y));
+                    lResult.Add(new Point(pStart.X + pPadding, pStart.Y - (pPadding / 2)));
+                    lResult.Add(new Point(pEnd.X - pPadding, pStart.Y - (pPadding / 2)));
                     lResult.Add(pEnd);
                 }
                 else
@@ -45,23 +46,13 @@ namespace XGraph.Extensions
             }
             else
             {
-                if (pStart.Y > pEnd.Y)
-                {
-                    Double lNewY = pEnd.Y + lHeight / 2.0;
-                    lResult.Add(pStart);
-                    lResult.Add(new Point(pStart.X, lNewY));
-                    lResult.Add(new Point(pEnd.X, lNewY));
-                    lResult.Add(pEnd);
-                }
-                else
-                {
-                    Double lNewY = pStart.Y + lHeight / 2.0;
-                    lResult.Add(pStart);
-                    lResult.Add(new Point(pStart.X, lNewY));
-                    lResult.Add(new Point(pEnd.X, lNewY));
-                    lResult.Add(pEnd);
-                }
+                lResult.Add(pStart);
+                lResult.Add(new Point(pStart.X + pPadding, pStart.Y));
+                lResult.Add(new Point(pEnd.X - pPadding, pEnd.Y));
+                lResult.Add(pEnd);
             }
+
+            
 
             return lResult;
         }

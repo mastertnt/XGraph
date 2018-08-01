@@ -3,6 +3,9 @@ using System.Windows;
 using System.Windows.Controls;
 using PropertyChanged;
 using XGraph.Extensions;
+using XGraph.ViewModels;
+using System.Windows.Data;
+using XGraph.Converters;
 
 namespace XGraph.Controls
 {
@@ -12,7 +15,7 @@ namespace XGraph.Controls
     /// </summary>
     /// <!-- Nicolas Baudrey -->
     [ImplementPropertyChanged]
-    public abstract class AConnector : UserControl
+    public abstract class AConnector : Control
     {
         #region Dependencies
 
@@ -21,7 +24,21 @@ namespace XGraph.Controls
         /// </summary>
         public static readonly DependencyProperty PositionProperty = DependencyProperty.Register("Position", typeof(Point), typeof(AConnector), new FrameworkPropertyMetadata(new Point(), OnPositionChanged));
 
+        /// <summary>
+        /// Identifies the ConnectionsCount dependency property.
+        /// </summary>
+        public static readonly DependencyProperty ConnectionsCountProperty = DependencyProperty.Register("ConnectionsCount", typeof(int), typeof(AConnector), new FrameworkPropertyMetadata(0));
+
         #endregion // Dependencies.
+
+        #region Fields
+
+        /// <summary>
+        /// Stores the connector parent port.
+        /// </summary>
+        private PortView mParentPort;
+
+        #endregion // Fields.
 
         #region Properties
 
@@ -41,12 +58,45 @@ namespace XGraph.Controls
         }
 
         /// <summary>
+        /// Gets or sets the flag indicating if the connector is connected at least once.
+        /// </summary>
+        public bool IsConnected
+        {
+            get
+            {
+                return (this.ConnectionsCount > 0);
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the number of connections connected to this connector.
+        /// </summary>
+        public int ConnectionsCount
+        {
+            get
+            {
+                return (int)this.GetValue(ConnectionsCountProperty);
+            }
+            set
+            {
+                this.SetValue(ConnectionsCountProperty, value);
+            }
+        }
+
+        /// <summary>
         /// Gets the connector parent port.
         /// </summary>
         public PortView ParentPort
         {
-            get;
-            private set;
+            get
+            {
+                if (this.mParentPort == null)
+                {
+                    this.mParentPort = this.FindVisualParent<PortView>();
+                }
+
+                return this.mParentPort;
+            }
         }
 
         #endregion // Properties
@@ -56,10 +106,8 @@ namespace XGraph.Controls
         /// <summary>
         /// Initializes a new instance of the <see cref="AConnector"/> class.
         /// </summary>
-        /// <param name="pParentPort">The connector parent port.</param>
-        protected AConnector(PortView pParentPort)
+        protected AConnector()
         {
-            this.ParentPort = pParentPort;
             this.LayoutUpdated += this.OnLayoutUpdated;
         }
 
@@ -77,10 +125,33 @@ namespace XGraph.Controls
         #region Methods
 
         /// <summary>
-        /// This method is called when the layout changes.
+        /// Called when the control is initialized.
         /// </summary>
         /// <param name="pEventArgs">The event arguments.</param>
-        private void OnLayoutUpdated(object sender, EventArgs pEventArgs)
+        protected override void OnInitialized(EventArgs pEventArgs)
+        {
+            base.OnInitialized(pEventArgs);
+
+            // Updating the bindings.
+            if (this.ParentPort != null)
+            {
+                PortViewModel lPortViewModel = this.ParentPort.Content as PortViewModel;
+
+                // Binding the IsConnected property.
+                Binding lIsConnectedBinding = new Binding("IsConnected");
+                lIsConnectedBinding.Source = lPortViewModel;
+                lIsConnectedBinding.Mode = BindingMode.OneWayToSource;
+                lIsConnectedBinding.Converter = new BooleanToInt32Converter() { ZeroValue = false };
+                this.SetBinding(AConnector.ConnectionsCountProperty, lIsConnectedBinding);
+            }
+        }
+
+        /// <summary>
+        /// This method is called when the layout changes.
+        /// </summary>
+        /// <param name="pSender">The event sender.</param>
+        /// <param name="pEventArgs">The event arguments.</param>
+        private void OnLayoutUpdated(object pSender, EventArgs pEventArgs)
         {
             AdornerLayeredCanvas lParentCanvas = this.FindVisualParent<AdornerLayeredCanvas>();
             if (lParentCanvas != null)

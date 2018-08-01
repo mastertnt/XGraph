@@ -32,9 +32,7 @@ namespace XGraph.Controls
         /// <summary>
         /// Initializes a new instance of the <see cref="OutputConnector"/> class.
         /// </summary>
-        /// <param name="pParentPort">The connector parent port.</param>
-        public OutputConnector(PortView pParentPort)
-            : base(pParentPort)
+        public OutputConnector()
         {
         }
 

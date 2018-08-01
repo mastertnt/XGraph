@@ -1,0 +1,9 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:converters="clr-namespace:XGraph.Themes.ExpressionDark.Converters"
+                    xmlns:xgraph_converters="clr-namespace:XGraph.Converters;assembly=XGraph">
+
+    <xgraph_converters:DebugConverter x:Key="DebugConverter" />
+    <converters:PortDirectionToHorizontalAlignmentConverter x:Key="PortDirectionToHorizontalAlignmentConverter" />
+
+</ResourceDictionary>

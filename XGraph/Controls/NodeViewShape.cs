@@ -14,9 +14,9 @@ namespace XGraph.Controls
         #region Dependencies
 
         /// <summary>
-        /// Identifies the BevelLenght dependency property.
+        /// Identifies the BevelLength dependency property.
         /// </summary>
-        public static readonly DependencyProperty BevelLenghtProperty = DependencyProperty.Register("BevelLenght", typeof(double), typeof(NodeViewShape), new FrameworkPropertyMetadata(0.0, FrameworkPropertyMetadataOptions.AffectsRender, OnBevelLenghtChanged));
+        public static readonly DependencyProperty BevelLengthProperty = DependencyProperty.Register("BevelLength", typeof(double), typeof(NodeViewShape), new FrameworkPropertyMetadata(0.0, FrameworkPropertyMetadataOptions.AffectsRender, OnBevelLengthChanged));
 
         #endregion // Dependencies.
 
@@ -37,15 +37,15 @@ namespace XGraph.Controls
         /// <summary>
         /// Gets or sets the bevel length of the shape.
         /// </summary>
-        public double BevelLenght
+        public double BevelLength
         {
             get
             {
-                return (double)this.GetValue(BevelLenghtProperty);
+                return (double)this.GetValue(BevelLengthProperty);
             }
             set
             {
-                this.SetValue(BevelLenghtProperty, value);
+                this.SetValue(BevelLengthProperty, value);
             }
         }
 
@@ -66,11 +66,11 @@ namespace XGraph.Controls
                 double lHeight = Math.Max(0, this.ActualHeight - lMargin);
 
                 // Defining the points.
-                Point lP1 = new Point(lX, this.BevelLenght);
-                Point lP2 = new Point(this.BevelLenght, lY);
+                Point lP1 = new Point(lX, this.BevelLength);
+                Point lP2 = new Point(this.BevelLength, lY);
                 Point lP3 = new Point(lWidth, lY);
-                Point lP4 = new Point(lWidth, lHeight - this.BevelLenght);
-                Point lP5 = new Point(lWidth - this.BevelLenght, lHeight);
+                Point lP4 = new Point(lWidth, lHeight - this.BevelLength);
+                Point lP5 = new Point(lWidth - this.BevelLength, lHeight);
                 Point lP6 = new Point(lX, lHeight);
 
                 // Building the path.
@@ -97,12 +97,12 @@ namespace XGraph.Controls
         #region Methods
 
         /// <summary>
-        /// Delegate called when the initiale or the final position changed.
+        /// Delegate called when the bevel length changed.
         /// </summary>
         /// <param name="pObject">The modified control.</param>
         /// <param name="pEventArgs">The event arguments.</param>
-        private static void OnBevelLenghtChanged(DependencyObject pObject, DependencyPropertyChangedEventArgs pEventArgs)
-        {
+        private static void OnBevelLengthChanged(DependencyObject pObject, DependencyPropertyChangedEventArgs pEventArgs)
+        {   
             NodeViewShape lRenderer = pObject as NodeViewShape;
             if (lRenderer != null)
             {

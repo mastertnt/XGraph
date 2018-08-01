@@ -12,7 +12,14 @@ namespace XGraph.ViewModels
     /// </summary>
     public enum PortDirection
     {
+        /// <summary>
+        /// Defines an input port.
+        /// </summary>
         Input,
+
+        /// <summary>
+        /// Defines an ouput port.
+        /// </summary>
         Output,
     }
 
@@ -23,9 +30,18 @@ namespace XGraph.ViewModels
     /// <!-- NBY -->
     [ImplementPropertyChanged]
     [DebuggerDisplay("[{Direction}] {DisplayString}")]
-    public class PortViewModel : INotifyPropertyChanged
+    public class PortViewModel
     {
         #region Properties
+
+        /// <summary>
+        /// Gets the identifier.
+        /// </summary>
+        public virtual string Id
+        {
+            get;
+            protected set;
+        }
 
         /// <summary>
         /// Gets or sets the parent node of the port.
@@ -33,51 +49,39 @@ namespace XGraph.ViewModels
         public NodeViewModel ParentNode
         {
             get;
-            set;
+            internal set;
         }
 
         /// <summary>
         /// Gets or sets the position.
         /// </summary>
-        /// <value>
-        /// The position.
-        /// </value>
         public Point Position
         {
-            get; 
+            get;
             set;
         }
 
         /// <summary>
         /// Gets or sets the type of the port.
         /// </summary>
-        /// <value>
-        /// The type of the port.
-        /// </value>
         public string PortType
         {
-            get; 
+            get;
             set;
         }
 
         /// <summary>
         /// Gets or sets the direction.
         /// </summary>
-        /// <value>
-        /// The direction.
-        /// </value>
         public PortDirection Direction
         {
-            get; 
+            get;
             set;
         }
 
         /// <summary>
         /// Gets or sets a value indicating whether this instance is selected.
         /// </summary>
-        /// <value>
-        /// <c>true</c> if this instance is selected; otherwise, <c>false</c>.
-        /// </value>
         public virtual bool IsSelected
         {
             get;
@@ -87,9 +91,6 @@ namespace XGraph.ViewModels
         /// <summary>
         /// Gets or sets a value indicating whether this instance is active.
         /// </summary>
-        /// <value>
-        ///   <c>true</c> if this instance is active; otherwise, <c>false</c>.
-        /// </value>
         public virtual bool IsActive
         {
             get;
@@ -99,10 +100,20 @@ namespace XGraph.ViewModels
         /// <summary>
         /// Gets or sets the display string.
         /// </summary>
-        /// <value>
-        /// The display string.
-        /// </value>
         public virtual string DisplayString
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Gets or sets the flag indicating if the port is connected or not.
+        /// </summary>
+        /// <remarks>
+        /// Must not be set by user. Only the GUI is able to update this flag properly.
+        /// </remarks>
+        [AlsoNotifyFor("Icon")]
+        public bool IsConnected
         {
             get;
             set;
@@ -111,20 +122,17 @@ namespace XGraph.ViewModels
         /// <summary>
         /// Gets or sets the icon.
         /// </summary>
-        /// <value>
-        /// The icon.
-        /// </value>
         public virtual ImageSource Icon
         {
             get
             {
-                if (this.Direction == PortDirection.Input)
+                if (this.IsConnected)
                 {
-                    return Themes.ExpressionDark.Instance["InputPort_Icon"] as BitmapImage;
+                    return this.ConnectedIcon;
                 }
                 else
                 {
-                    return Themes.ExpressionDark.Instance["OutputPort_Icon"] as BitmapImage;
+                    return this.DisconnectedIcon;
                 }
             }
             set
@@ -134,36 +142,83 @@ namespace XGraph.ViewModels
         }
 
         /// <summary>
+        /// Gets the icon to display when the port is disconnected.
+        /// </summary>
+        protected virtual ImageSource DisconnectedIcon
+        {
+            get
+            {
+                if (this.Direction == PortDirection.Input)
+                {
+                    return Themes.ThemeManager.Instance.FindResource("InputPort_Disconnected_Icon") as BitmapImage;
+                }
+                else
+                {
+                    return Themes.ThemeManager.Instance.FindResource("OutputPort_Disconnected_Icon") as BitmapImage;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets the icon to display when the port is connected.
+        /// </summary>
+        protected virtual ImageSource ConnectedIcon
+        {
+            get
+            {
+                if (this.Direction == PortDirection.Input)
+                {
+                    return Themes.ThemeManager.Instance.FindResource("InputPort_Connected_Icon") as BitmapImage;
+                }
+                else
+                {
+                    return Themes.ThemeManager.Instance.FindResource("OutputPort_Connected_Icon") as BitmapImage;
+                }
+            }
+        }
+
+        /// <summary>
         /// Gets the data template.
         /// </summary>
-        /// <value>
-        /// The data template.
-        /// </value>
         public DataTemplate DataTemplate
         {
             get
             {
                 if (this.Direction == PortDirection.Input)
                 {
-                    return Themes.ExpressionDark.Instance["InputPortViewDefaultDataTemplate"] as DataTemplate;
+                    return Themes.ThemeManager.Instance.FindResource("InputPortViewDefaultDataTemplate") as DataTemplate;
                 }
                 else
                 {
-                    return Themes.ExpressionDark.Instance["OutputPortViewDefaultDataTemplate"] as DataTemplate;
+                    return Themes.ThemeManager.Instance.FindResource("OutputPortViewDefaultDataTemplate") as DataTemplate;
                 }
             }
         }
 
+        /// <summary>
+        /// Gets or sets the ToolTip of the port.
+        /// </summary>
+        public virtual string ToolTip
+        {
+            get;
+            set;
+        }
+
         #endregion // Properties.
 
-        #region Events
+        #region Constructors
 
         /// <summary>
-        /// Occurs when a property value changes.
+        /// Initializes a new instance of the <see cref="PortViewModel"/> class.
         /// </summary>
-        public event PropertyChangedEventHandler PropertyChanged;
+        public PortViewModel()
+        {
+            this.Id = string.Empty;
+            this.IsActive = true;
+            this.IsConnected = false;
+        }
 
-        #endregion // Events.
+        #endregion // Constructors.
 
         #region Methods
 

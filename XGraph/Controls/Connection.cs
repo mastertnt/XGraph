@@ -3,6 +3,7 @@ using PropertyChanged;
 using XGraph.Extensions;
 using XGraph.ViewModels;
 using System;
+using System.Windows.Data;
 
 namespace XGraph.Controls
 {
@@ -11,7 +12,7 @@ namespace XGraph.Controls
     /// </summary>
     /// <!-- Nicolas Baudrey -->
     [ImplementPropertyChanged]
-    public class Connection : AGraphItemContainer
+    public class Connection : AGraphItem
     {
         #region Dependencies
 
@@ -35,6 +36,11 @@ namespace XGraph.Controls
         /// </summary>
         public static readonly DependencyProperty RelativeToProperty = DependencyProperty.Register("RelativeTo", typeof(Point), typeof(Connection), new FrameworkPropertyMetadata(new Point()));
 
+        /// <summary>
+        /// Identifies the LineWidth dependency property.
+        /// </summary>
+        public static readonly DependencyProperty LineWidthProperty = DependencyProperty.Register("LineWidth", typeof(double), typeof(Connection), new FrameworkPropertyMetadata(1.0, OnLineWidthChanged));
+
         #endregion // Dependencies.
 
         #region Constructors
@@ -45,6 +51,7 @@ namespace XGraph.Controls
         static Connection()
         {
             Connection.DefaultStyleKeyProperty.OverrideMetadata(typeof(Connection), new FrameworkPropertyMetadata(typeof(Connection)));
+            Connection.PaddingProperty.OverrideMetadata(typeof(Connection), new FrameworkPropertyMetadata(new Thickness(0.0), OnPaddingChanged));
         }
 
         #endregion // Constructors.
@@ -111,6 +118,21 @@ namespace XGraph.Controls
             }
         }
 
+        /// <summary>
+        /// Gets or sets the connection line width.
+        /// </summary>
+        public double LineWidth
+        {
+            get
+            {
+                return (double)this.GetValue(LineWidthProperty);
+            }
+            set
+            {
+                this.SetValue(LineWidthProperty, value);
+            }
+        }
+
         #endregion // Properties.
 
         #region Methods
@@ -125,11 +147,15 @@ namespace XGraph.Controls
             // Calling ancestor methods.
             base.OnContentChanged(pOldContent, pNewContent);
 
+            BindingOperations.ClearAllBindings(this);
+
             // The content is the view model.
             ConnectionViewModel lViewModel = pNewContent as ConnectionViewModel;
             if (lViewModel == null)
             {
                 // Unreferencing the connectors to avoid memory leaks.
+                this.OutputConnector.ConnectionsCount--;
+                this.InputConnector.ConnectionsCount--;
                 this.OutputConnector.PositionChanged -= this.OnConnectorPositionChanged;
                 this.InputConnector.PositionChanged -= this.OnConnectorPositionChanged;
                 this.OutputConnector = null;
@@ -137,6 +163,12 @@ namespace XGraph.Controls
             }
             else
             {
+                // Binding the Background property.
+                Binding lBackgroundBinding = new Binding("Brush");
+                lBackgroundBinding.Source = lViewModel;
+                lBackgroundBinding.Mode = BindingMode.OneWay;
+                this.SetBinding(Connection.BackgroundProperty, lBackgroundBinding);
+
                 // Filling the output and input connectors.
                 SimpleGraphView lParentCanvas = this.FindVisualParent<SimpleGraphView>();
                 if (lViewModel != null && lParentCanvas != null)
@@ -151,10 +183,7 @@ namespace XGraph.Controls
                             if (this.OutputConnector != null)
                             {
                                 this.OutputConnector.PositionChanged += this.OnConnectorPositionChanged;
-                            }
-                            else
-                            {
-                                this.OutputConnector.PositionChanged -= this.OnConnectorPositionChanged;
+                                this.OutputConnector.ConnectionsCount++;
                             }
                         }
                     }
@@ -169,10 +198,7 @@ namespace XGraph.Controls
                             if (this.InputConnector != null)
                             {
                                 this.InputConnector.PositionChanged += this.OnConnectorPositionChanged;
-                            }
-                            else
-                            {
-                                this.InputConnector.PositionChanged -= this.OnConnectorPositionChanged;
+                                this.InputConnector.ConnectionsCount++;
                             }
                         }
                     }
@@ -185,8 +211,9 @@ namespace XGraph.Controls
         /// <summary>
         /// Computes the bounding of the connection using the connectors positions.
         /// </summary>
+        /// <param name="pTakeInAcountMargin">Flag indicating if the margin have to be taken in account during the bounding computation.</param>
         /// <returns>The computed bounding box.</returns>
-        private Rect ComputeBoundingBox()
+        private Rect ComputeBoundingBox(bool pTakeInAcountMargin)
         {
             if (this.OutputConnector != null && this.InputConnector != null)
             {
@@ -194,9 +221,25 @@ namespace XGraph.Controls
                 Point lEndPos = this.InputConnector.Position;
 
                 double lX = Math.Min(lStartPos.X, lEndPos.X);
+                if (pTakeInAcountMargin)
+                {
+                    lX -= (this.LineWidth / 2.0 + this.Padding.Left);
+                }
                 double lY = Math.Min(lStartPos.Y, lEndPos.Y);
+                if (pTakeInAcountMargin)
+                {
+                    lY -= (this.LineWidth / 2.0 + this.Padding.Top);
+                }
                 double lWidth = Math.Abs(lStartPos.X - lEndPos.X);
+                if (pTakeInAcountMargin)
+                {
+                    lWidth += this.LineWidth + this.Padding.Left + this.Padding.Right;
+                }
                 double lHeight = Math.Abs(lStartPos.Y - lEndPos.Y);
+                if (pTakeInAcountMargin)
+                {
+                    lHeight += this.LineWidth + this.Padding.Top + this.Padding.Bottom;
+                }
 
                 return new Rect(lX, lY, lWidth, lHeight);
             }
@@ -211,6 +254,7 @@ namespace XGraph.Controls
         private void UpdateBoundingBox(Rect pNewBounding)
         {
             this.SetCanvasPosition(pNewBounding.TopLeft);
+
             this.Width = pNewBounding.Width;
             this.Height = pNewBounding.Height;
         }
@@ -218,7 +262,7 @@ namespace XGraph.Controls
         /// <summary>
         /// Updates the relative position of the connection limits using the new bounding.
         /// </summary>
-        /// <param name="pNewBounding">The bounding box to tke in account.</param>
+        /// <param name="pNewBounding">The bounding box to take in account.</param>
         private void UpdateRelativePos(Rect pNewBounding)
         {
             if (this.OutputConnector != null && this.InputConnector != null)
@@ -227,40 +271,40 @@ namespace XGraph.Controls
                 {
                     if (this.OutputConnector.Position == pNewBounding.TopLeft)
                     {
-                        this.RelativeFrom = new Point(0.0, 0.0);
+                        this.RelativeFrom = new Point(this.LineWidth / 2.0 + this.Padding.Left, this.LineWidth / 2.0 + this.Padding.Top);
                     }
                     else
                     {
-                        this.RelativeFrom = new Point(0.0, pNewBounding.Height);
+                        this.RelativeFrom = new Point(this.LineWidth / 2.0 + this.Padding.Left, pNewBounding.Height + this.LineWidth / 2.0 + this.Padding.Top);
                     }
 
                     if (this.InputConnector.Position == pNewBounding.TopRight)
                     {
-                        this.RelativeTo = new Point(pNewBounding.Width, 0.0);
+                        this.RelativeTo = new Point(pNewBounding.Width + this.LineWidth / 2.0 + this.Padding.Left, this.LineWidth / 2.0 + this.Padding.Top);
                     }
                     else
                     {
-                        this.RelativeTo = new Point(pNewBounding.Width, pNewBounding.Height);
+                        this.RelativeTo = new Point(pNewBounding.Width + this.LineWidth / 2.0 + this.Padding.Left, pNewBounding.Height + this.LineWidth / 2.0 + this.Padding.Top);
                     }
                 }
                 else
                 {
                     if (this.InputConnector.Position == pNewBounding.TopLeft)
                     {
-                        this.RelativeTo = new Point(0.0, 0.0);
+                        this.RelativeTo = new Point(this.LineWidth / 2.0 + this.Padding.Left, this.LineWidth / 2.0 + this.Padding.Top);
                     }
                     else
                     {
-                        this.RelativeTo = new Point(0.0, pNewBounding.Height);
+                        this.RelativeTo = new Point(this.LineWidth / 2.0 + this.Padding.Left, pNewBounding.Height + this.LineWidth / 2.0 + this.Padding.Top);
                     }
 
                     if (this.OutputConnector.Position == pNewBounding.TopRight)
                     {
-                        this.RelativeFrom = new Point(pNewBounding.Width, 0.0);
+                        this.RelativeFrom = new Point(pNewBounding.Width + this.LineWidth / 2.0 + this.Padding.Left, this.LineWidth / 2.0 + this.Padding.Top);
                     }
                     else
                     {
-                        this.RelativeFrom = new Point(pNewBounding.Width, pNewBounding.Height);
+                        this.RelativeFrom = new Point(pNewBounding.Width + this.LineWidth / 2.0 + this.Padding.Left, pNewBounding.Height + this.LineWidth / 2.0 + this.Padding.Top);
                     }
                 }
             }
@@ -277,18 +321,47 @@ namespace XGraph.Controls
         }
 
         /// <summary>
+        /// Delegate called when the line width changed.
+        /// </summary>
+        /// <param name="pObject">The modified control.</param>
+        /// <param name="pEventArgs">The event arguments.</param>
+        private static void OnLineWidthChanged(DependencyObject pObject, DependencyPropertyChangedEventArgs pEventArgs)
+        {
+            Connection lConnection = pObject as Connection;
+            if (lConnection != null)
+            {
+                lConnection.UpdateRendering();
+            }
+        }
+
+        /// <summary>
+        /// Delegate called when the padding changed.
+        /// </summary>
+        /// <param name="pObject">The modified control.</param>
+        /// <param name="pEventArgs">The event arguments.</param>
+        private static void OnPaddingChanged(DependencyObject pObject, DependencyPropertyChangedEventArgs pEventArgs)
+        {
+            Connection lConnection = pObject as Connection;
+            if (lConnection != null)
+            {
+                lConnection.UpdateRendering();
+            }
+        }
+
+        /// <summary>
         /// Updates the connection rendering properties.
         /// </summary>
         private void UpdateRendering()
         {
-            // Computes the new bounding box.
-            Rect lBoundingBox = this.ComputeBoundingBox();
+            // Computes the new bounding box taking in account the line width.
+            Rect lFullBoundingBox = this.ComputeBoundingBox(true);
 
             // Updating it.
-            this.UpdateBoundingBox(lBoundingBox);
+            this.UpdateBoundingBox(lFullBoundingBox);
 
-            // Updating the relative position of the connection rendering.
-            this.UpdateRelativePos(lBoundingBox);
+            // Updating the relative position of the connection rendering without taking in account the line width.
+            Rect lLazyBoundingBox = this.ComputeBoundingBox(false);
+            this.UpdateRelativePos(lLazyBoundingBox);
         }
 
         #endregion // Methods.
