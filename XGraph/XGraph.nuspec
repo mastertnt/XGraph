@@ -1,24 +1,25 @@
 <?xml version="1.0"?>
 <package>
   <metadata>
-    <id>XScriptedObject</id>
+    <id>XGraph</id>
     <version>1.0.0</version>
     <authors>mrHide</authors>
     <owners>mrHide</owners>
-    <licenseUrl>https://github.com/mastertnt/XScriptedObject/blob/master/LICENSE</licenseUrl>
-    <projectUrl>https://github.com/mastertnt/XScriptedObject</projectUrl>
+    <licenseUrl>https://github.com/mastertnt/XGraph/blob/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/mastertnt/XGraph</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>A library to create C# object from script.</description>
+    <description>A library to display nice flow graphs in WPF.</description>
     <releaseNotes>Initial release.</releaseNotes>
     <copyright>Copyright 2018</copyright>
-    <tags>Script C#</tags>
+    <tags>A flow graph in WPF</tags>
     <dependencies>
-      <dependency id="NUnit" version="3.10.1" />
-	  <dependency id="Sprache" version="2.1.2" />
+      <dependency id="Fody" version="1.29.4" />
+	  <dependency id="PropertyChanged.Fody" version="1.29.4" />	  
+	  <dependency id="XZoomAndPan" version="1.0.0" />
     </dependencies>
 
   </metadata>
   	<files>
-	<file src="..\Build\Release_x86\XScriptedObject.dll" target="lib\net45" />
+	<file src="..\Build\Release_x86\XGraph.dll" target="lib\net45" />
   </files>
 </package>
