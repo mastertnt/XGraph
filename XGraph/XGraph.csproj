@@ -18,7 +18,6 @@
     <RestorePackages>true</RestorePackages>
   </PropertyGroup>
   <Import Project="..\Targets\XGraph.Output.Targets" />
-  <Import Project="..\Targets\XZoomAndPan.Targets" />
   <PropertyGroup>
     <StartupObject />
   </PropertyGroup>
@@ -42,7 +41,8 @@
     <Reference Include="PresentationFramework" />
     <Reference Include="XZoomAndPan, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\.\NuGet\InstalledPackages\XZoomAndPan.1.0.0\lib\net40\XZoomAndPan.dll</HintPath>
+      <HintPath>..\NuGet\InstalledPackages\XZoomAndPan.1.0.0\lib\net40\XZoomAndPan.dll</HintPath>
+      <Private>True</Private>
     </Reference>
   </ItemGroup>
   <ItemGroup>

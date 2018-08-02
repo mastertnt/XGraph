@@ -19,7 +19,6 @@
     <DocumentationFile>..\Build\Debug_x86\XGraph.Themes.ExpressionDark.xml</DocumentationFile>
   </PropertyGroup>
   <Import Project="..\Targets\XGraph.Output.Targets" />
-  <Import Project="..\Targets\XZoomAndPan.Targets" />
   <ItemGroup>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
@@ -32,6 +31,11 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
     <Reference Include="WindowsBase" />
+    <Reference Include="XZoomAndPan, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\NuGet\InstalledPackages\XZoomAndPan.1.0.0\lib\net40\XZoomAndPan.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controls\InfosIndicatorTooltipShape.cs" />
@@ -71,12 +75,6 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\XGraph\XGraph.csproj">
-      <Project>{152277e0-4e7a-4586-bf49-05ac85ceafc1}</Project>
-      <Name>XGraph</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Resources\Fonts\ArialN.ttf" />
   </ItemGroup>
   <ItemGroup>
@@ -89,6 +87,15 @@
   <ItemGroup>
     <Resource Include="Resources\Icons\ErrorIcon.png" />
     <Resource Include="Resources\Icons\WarningIcon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\XGraph\XGraph.csproj">
+      <Project>{152277e0-4e7a-4586-bf49-05ac85ceafc1}</Project>
+      <Name>XGraph</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
