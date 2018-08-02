@@ -25,7 +25,7 @@ namespace XGraph.Controls
 
         #endregion // Fields.
 
-         #region Constructors
+        #region Constructors
 
         /// <summary>
         /// Innitializes a new instance of the <see>
