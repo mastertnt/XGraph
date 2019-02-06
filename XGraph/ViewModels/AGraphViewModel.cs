@@ -9,7 +9,6 @@ namespace XGraph.ViewModels
     /// <summary>
     /// This class represents a view model of the graph.
     /// </summary>
-    [ImplementPropertyChanged]
     public abstract class AGraphViewModel : INotifyPropertyChanged
     {
         #region Fields

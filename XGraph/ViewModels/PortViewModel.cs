@@ -28,9 +28,8 @@ namespace XGraph.ViewModels
     /// A port can be connected to another port.
     /// </summary>
     /// <!-- NBY -->
-    [ImplementPropertyChanged]
     [DebuggerDisplay("[{Direction}] {DisplayString}")]
-    public class PortViewModel
+    public class PortViewModel : INotifyPropertyChanged
     {
         #region Properties
 
@@ -219,6 +218,15 @@ namespace XGraph.ViewModels
         }
 
         #endregion // Constructors.
+
+        #region Events
+
+        /// <summary>
+        /// Event raised when a property is modified.
+        /// </summary>
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        #endregion // Events.
 
         #region Methods
 

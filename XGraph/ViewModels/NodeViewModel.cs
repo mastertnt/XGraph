@@ -1,7 +1,11 @@
-﻿using System.Windows;
+﻿using System.Collections.Specialized;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
+using System.Windows;
 using PropertyChanged;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using XGraph.Annotations;
 
 namespace XGraph.ViewModels
 {
@@ -12,8 +16,7 @@ namespace XGraph.ViewModels
     ///     - Connections between ports.
     /// </summary>
     /// <!-- NBY -->
-    [ImplementPropertyChanged]
-    public class NodeViewModel : IGraphItemViewModel, IPositionable
+    public class NodeViewModel : IGraphItemViewModel, IPositionable, INotifyPropertyChanged
     {
         #region Constructors
 
@@ -190,5 +193,12 @@ namespace XGraph.ViewModels
         }
 
         #endregion // Properties.
+
+        #region Events
+
+        /// <inheritdoc />
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        #endregion // Events.
     }
 }

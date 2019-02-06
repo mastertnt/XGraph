@@ -1,7 +1,7 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
-using PropertyChanged;
 using XGraph.Extensions;
 using XGraph.ViewModels;
 using System.Windows.Data;
@@ -14,8 +14,7 @@ namespace XGraph.Controls
     /// A connector is used to anchor a connection.
     /// </summary>
     /// <!-- Nicolas Baudrey -->
-    [ImplementPropertyChanged]
-    public abstract class AConnector : Control
+    public abstract class AConnector : Control, INotifyPropertyChanged
     {
         #region Dependencies
 
@@ -119,6 +118,12 @@ namespace XGraph.Controls
         /// Event raised when the position has changed.
         /// </summary>
         public event Action<Point, Point> PositionChanged;
+
+        /// <summary>
+        /// Event raised when a property is modified.
+        /// </summary>
+        public event PropertyChangedEventHandler PropertyChanged;
+
 
         #endregion // Events.
 

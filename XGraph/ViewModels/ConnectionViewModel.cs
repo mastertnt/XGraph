@@ -1,4 +1,5 @@
-﻿using PropertyChanged;
+﻿using System.ComponentModel;
+using PropertyChanged;
 using System.Windows;
 using System.Windows.Media;
 
@@ -7,8 +8,7 @@ namespace XGraph.ViewModels
     /// <summary>
     /// Class defining the connection view model.
     /// </summary>
-    [ImplementPropertyChanged]
-    public class ConnectionViewModel : IGraphItemViewModel
+    public class ConnectionViewModel : IGraphItemViewModel, INotifyPropertyChanged
     {
         #region Constructors
 
@@ -92,5 +92,12 @@ namespace XGraph.ViewModels
         }
 
         #endregion // Properties.
+
+        #region Events
+
+        /// <inheritdoc />
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        #endregion // Events.
     }
 }

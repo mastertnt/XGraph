@@ -3,6 +3,7 @@ using PropertyChanged;
 using XGraph.Extensions;
 using XGraph.ViewModels;
 using System;
+using System.ComponentModel;
 using System.Windows.Data;
 
 namespace XGraph.Controls
@@ -11,8 +12,7 @@ namespace XGraph.Controls
     /// This class represents a connection.
     /// </summary>
     /// <!-- Nicolas Baudrey -->
-    [ImplementPropertyChanged]
-    public class Connection : AGraphItem
+    public class Connection : AGraphItem, INotifyPropertyChanged
     {
         #region Dependencies
 
@@ -134,6 +134,15 @@ namespace XGraph.Controls
         }
 
         #endregion // Properties.
+
+        #region Events
+
+        /// <summary>
+        /// Event raised when a property is modified.
+        /// </summary>
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        #endregion // Events.
 
         #region Methods
 
