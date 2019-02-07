@@ -27,11 +27,8 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
     <Reference Include="WindowsBase" />
-    <Reference Include="XTreeListView, Version=1.0.1.0, Culture=neutral, processorArchitecture=x86">
-      <HintPath>..\NuGet\InstalledPackages\XZoomAndPan.2.1.1\lib\net45\XTreeListView.dll</HintPath>
-    </Reference>
     <Reference Include="XZoomAndPan, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86">
-      <HintPath>..\NuGet\InstalledPackages\XZoomAndPan.2.1.1\lib\net45\XZoomAndPan.dll</HintPath>
+      <HintPath>..\NuGet\InstalledPackages\XZoomAndPan.2.1.2\lib\net47\XZoomAndPan.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
