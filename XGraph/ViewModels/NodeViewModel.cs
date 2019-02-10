@@ -207,7 +207,7 @@ namespace XGraph.ViewModels
         /// Notifies when a property is changed.
         /// </summary>
         /// <param name="pPropertyName"></param>
-        protected void OnPropertyChanged(string pPropertyName)
+        public void OnPropertyChanged(string pPropertyName)
         {
             if (this.PropertyChanged != null)
             {

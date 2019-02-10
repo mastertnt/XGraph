@@ -2,7 +2,7 @@
 <package>
   <metadata>
     <id>XGraph</id>
-    <version>2.1.4</version>
+    <version>$version</version>
     <authors>mrHide</authors>
     <owners>mrHide</owners>
     <licenseUrl>https://github.com/mastertnt/XGraph/blob/master/LICENSE</licenseUrl>
