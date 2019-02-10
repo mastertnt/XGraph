@@ -240,18 +240,17 @@ namespace XGraph.ViewModels
             return true;
         }
 
-        #region Methods
-
         /// <summary>
         /// Notifies when a property is changed.
         /// </summary>
         /// <param name="pPropertyName"></param>
         protected void OnPropertyChanged(string pPropertyName)
         {
-            this?.PropertyChanged(this, new PropertyChangedEventArgs(pPropertyName));
+            if (this.PropertyChanged != null)
+            {
+                this.PropertyChanged(this, new PropertyChangedEventArgs(pPropertyName));
+            }
         }
-
-        #endregion Methods.
 
         #endregion // Methods.
     }
