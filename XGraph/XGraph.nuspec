@@ -14,6 +14,7 @@
     <tags>A flow graph in WPF</tags>
   </metadata>
   	<files>
-	<file src="..\Build\Release_x86\XGraph.dll" target="lib\net45" />
+	<file src="..\Build\Release_x86\XGraph.dll" target="lib\net47" />
+	<file src="..\Build\Release_x86\XGraph.Themes.ExpressionDark.dll" target="lib\net47" />
   </files>
 </package>
