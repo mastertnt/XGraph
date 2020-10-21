@@ -144,7 +144,11 @@ namespace XGraph.ViewModels
         {
             get
             {
-                return Themes.ThemeManager.Instance.FindResource("Breakpoint_Icon") as BitmapImage;
+                if (this.HasInputBreakpoint)
+                {
+                    return Themes.ThemeManager.Instance.FindResource("Breakpoint_Icon") as BitmapImage;
+                }
+                return null;
             }
 
             set
@@ -161,7 +165,11 @@ namespace XGraph.ViewModels
         {
             get
             {
-                return Themes.ThemeManager.Instance.FindResource("Breakpoint_Icon") as BitmapImage;
+                if (this.HasOuputBreakpoint)
+                {
+                    return Themes.ThemeManager.Instance.FindResource("Breakpoint_Icon") as BitmapImage;
+                }
+                return null;
             }
 
             set
