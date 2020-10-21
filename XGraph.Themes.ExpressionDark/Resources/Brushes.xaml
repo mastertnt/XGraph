@@ -23,4 +23,7 @@
     <SolidColorBrush x:Key="Tooltip_Background_Brush" Color="Gray" />
     <SolidColorBrush x:Key="Tooltip_Foreground_Brush" Color="White" />
 
+    <SolidColorBrush x:Key="NodeView_IsSuspendedInputBackground_Brush" Color="#FF2F874D" />
+    <SolidColorBrush x:Key="NodeView_IsSuspendedOutputBackground_Brush" Color="#FF2F874D" />
+
 </ResourceDictionary>

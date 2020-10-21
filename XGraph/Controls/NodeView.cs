@@ -45,6 +45,16 @@ namespace XGraph.Controls
         /// </summary>
         public static readonly DependencyProperty ErrorsDataTemplateProperty = DependencyProperty.Register("ErrorsDataTemplate", typeof(DataTemplate), typeof(NodeView), new FrameworkPropertyMetadata(null));
 
+        /// <summary>
+        /// Identifies the HasInputBreakpoint dependency property.
+        /// </summary>
+        public static readonly DependencyProperty HasInputBreakpointProperty = DependencyProperty.Register("HasInputBreakpoint", typeof(bool), typeof(NodeView), new FrameworkPropertyMetadata(false));
+
+        /// <summary>
+        /// Identifies the HasOuputBreakPoint dependency property.
+        /// </summary>
+        public static readonly DependencyProperty HasOuputBreakPointProperty = DependencyProperty.Register("HasOuputBreakPoint", typeof(bool), typeof(NodeView), new FrameworkPropertyMetadata(false));
+
         #endregion // Dependencies.
 
         #region Fields
@@ -95,6 +105,36 @@ namespace XGraph.Controls
             set
             {
                 this.SetValue(IsActiveProperty, value);
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the flag indicating if the node is suspended for the inputs.
+        /// </summary>
+        public bool HasInputBreakpoint
+        {
+            get
+            {
+                return (bool)this.GetValue(HasInputBreakpointProperty);
+            }
+            set
+            {
+                this.SetValue(HasInputBreakpointProperty, value);
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the flag indicating if the node is suspended for the outputs.
+        /// </summary>
+        public bool HasOuputBreakPoint
+        {
+            get
+            {
+                return (bool)this.GetValue(HasOuputBreakPointProperty);
+            }
+            set
+            {
+                this.SetValue(HasOuputBreakPointProperty, value);
             }
         }
 
@@ -212,6 +252,18 @@ namespace XGraph.Controls
                 lErrorsBinding.Source = lNewContent;
                 lErrorsBinding.Mode = BindingMode.TwoWay;
                 this.SetBinding(NodeView.ErrorsProperty, lErrorsBinding);
+
+                // Binding the IsSuspendedInput property.
+                Binding lHasInputBreakpointBinding = new Binding("HasInputBreakpoint");
+                lHasInputBreakpointBinding.Source = lNewContent;
+                lHasInputBreakpointBinding.Mode = BindingMode.TwoWay;
+                this.SetBinding(NodeView.HasInputBreakpointProperty, lHasInputBreakpointBinding);
+
+                // Binding the IsSuspendOutput property.
+                Binding lHasOuputBreakpointBinding = new Binding("HasOutputBreakpoint");
+                lHasOuputBreakpointBinding.Source = lNewContent;
+                lHasOuputBreakpointBinding.Mode = BindingMode.TwoWay;
+                this.SetBinding(NodeView.HasOuputBreakPointProperty, lHasOuputBreakpointBinding);
 
                 // Binding the WarningsDataTemplate property.
                 Binding lWarningsDataTemplateBinding = new Binding("WarningsDataTemplate");

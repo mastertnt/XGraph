@@ -96,6 +96,8 @@ namespace XGraph.TestApp
         public NodeViewModel CreateNode(string pId, string pTitle, int pInputPort, int pOutputPort)
         {
             NodeViewModel lNode = new NodeViewModel();
+            lNode.HasInputBreakpoint = true;
+            lNode.HasInputBreakpoint = false;
             lNode.DisplayString = pTitle;
             for (int i = 0; i < pInputPort; i++)
             {
@@ -137,6 +139,7 @@ namespace XGraph.TestApp
         {
             GraphViewModel lRootViewModel = this.GraphView.DataContext as GraphViewModel;
             NodeViewModel lNode1 = new TypeNodeViewModel(typeof(SampleClass1VeryTooMuchLong));
+            lNode1.HasInputBreakpoint = true;
             lRootViewModel.AddNode(lNode1);
         }
 

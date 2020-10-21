@@ -8,4 +8,6 @@
     <imaging:BitmapImage x:Key="InputPort_Connected_Icon" UriSource="/XGraph;Component/Resources/Icons/InputPortIcon.png" />
     <imaging:BitmapImage x:Key="OutputPort_Connected_Icon" UriSource="/XGraph;Component/Resources/Icons/OutputPortIcon.png" />
 
+    <imaging:BitmapImage x:Key="Breakpoint_Icon" UriSource="/XGraph;Component/Resources/Icons/BreakpointIcon.png" />
+
 </ResourceDictionary>

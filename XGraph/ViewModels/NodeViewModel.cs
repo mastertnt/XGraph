@@ -78,6 +78,24 @@ namespace XGraph.ViewModels
         }
 
         /// <summary>
+        /// Gets or sets a value indicating whether this instance has an input breakpoint.
+        /// </summary>
+        public virtual bool HasInputBreakpoint
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether this instance has an output breakpoint.
+        /// </summary>
+        public virtual bool HasOuputBreakpoint
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
         /// Gets or sets the ports.
         /// </summary>
         public PortViewModelCollection Ports 
@@ -117,6 +135,40 @@ namespace XGraph.ViewModels
             {
                 // Nothing to do.
             }
+        }
+
+        /// <summary>
+        /// Gets or sets the icon.
+        /// </summary>
+        public virtual ImageSource IconBreakpointInput
+        {
+            get
+            {
+                return Themes.ThemeManager.Instance.FindResource("Breakpoint_Icon") as BitmapImage;
+            }
+
+            set
+            {
+                // Nothing to do.
+            }
+
+        }
+
+        /// <summary>
+        /// Gets or sets the icon.
+        /// </summary>
+        public virtual ImageSource IconBreakpointOutput
+        {
+            get
+            {
+                return Themes.ThemeManager.Instance.FindResource("Breakpoint_Icon") as BitmapImage;
+            }
+
+            set
+            {
+                // Nothing to do.
+            }
+
         }
 
         /// <summary>

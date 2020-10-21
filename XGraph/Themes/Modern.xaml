@@ -205,13 +205,23 @@
             <Trigger Property="IsActive" Value="True">
                 <Setter Property="Background" Value="{StaticResource NodeView_IsActiveBackground_Brush}" />
             </Trigger>
+            <Trigger Property="HasInputBreakpoint" Value="True">
+                <Setter Property="HeaderBackground" Value="{StaticResource NodeView_IsSuspendedInputBackground_Brush}" />
+            </Trigger>
+            <Trigger Property="HasOuputBreakPoint" Value="True">
+                <Setter Property="HeaderBackground" Value="{StaticResource NodeView_IsSuspendedOutputBackground_Brush}" />
+            </Trigger>
         </Style.Triggers>
     </Style>
 
     <!-- NodeView default data template for its content. -->
     <DataTemplate x:Key="NodeViewDefaultDataTemplate">
         <StackPanel>
-            <TextBlock Text="{Binding DisplayString}" Margin="0,0,6,0" HorizontalAlignment="Right" FontSize="20" />
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <Image Source="{Binding IconBreakpointInput}" Width="16" Height="16" Margin="3,0,4,0" />
+                <TextBlock Text="{Binding DisplayString}" Margin="0,0,6,0" HorizontalAlignment="Right" FontSize="20" />
+                <Image Source="{Binding IconBreakpointOutput}" Width="16" Height="16" Margin="0,0,4,0" />
+            </StackPanel>
             <TextBlock Text="{Binding Description}" Margin="0,0,6,0" HorizontalAlignment="Right" FontSize="12" />
         </StackPanel>
     </DataTemplate>
