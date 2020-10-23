@@ -23,7 +23,18 @@
     <SolidColorBrush x:Key="Tooltip_Background_Brush" Color="Gray" />
     <SolidColorBrush x:Key="Tooltip_Foreground_Brush" Color="White" />
 
-    <SolidColorBrush x:Key="NodeView_IsSuspendedInputBackground_Brush" Color="#FF2F874D" />
-    <SolidColorBrush x:Key="NodeView_IsSuspendedOutputBackground_Brush" Color="#FF2F874D" />
+    <LinearGradientBrush x:Key="NodeView_IsSuspendedOutputBackground_Brush" StartPoint="0,0" EndPoint="1,0">
+        <LinearGradientBrush.GradientStops>
+            <GradientStop Color="#FF7A0000" Offset="0" />
+            <GradientStop Color="#FFB40505" Offset="1" />
+        </LinearGradientBrush.GradientStops>
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="NodeView_IsSuspendedInputBackground_Brush" StartPoint="0,0" EndPoint="1,0">
+        <LinearGradientBrush.GradientStops>
+            <GradientStop Color="#FFB40505" Offset="0" />
+            <GradientStop Color="#FF7A0000" Offset="1" />
+        </LinearGradientBrush.GradientStops>
+    </LinearGradientBrush>
 
 </ResourceDictionary>
