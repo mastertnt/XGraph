@@ -259,17 +259,19 @@ namespace XGraph.TestApp
         /// <param name="pEventArgs"></param>
         private void OnGraphViewSelectionChanged(object pSender, SelectionChangedEventArgs pEventArgs)
         {
+            NodeViewModel lPreviousSelectedItem = this.mPropertyEditor.SelectedObject as NodeViewModel;
+            if (lPreviousSelectedItem != null)
+            {
+                lPreviousSelectedItem.PropertyChanged -= this.OnPropertyChanged;
+            }
             NodeViewModel lSelectedItem = this.GraphView.SelectedViewModels.OfType<NodeViewModel>().FirstOrDefault();
-            if (lSelectedItem != null)
-            {
-                this.mIsActiveButton.Content = "IsActive : " + lSelectedItem.DisplayString;
-                this.mIsActiveButton.IsChecked = lSelectedItem.IsActive;
-            }
+            this.mPropertyEditor.SelectedObject = lSelectedItem;
+            lSelectedItem.PropertyChanged += this.OnPropertyChanged;
+        }
 
-            if (this.GraphView.SelectedViewModels.OfType<NodeViewModel>().Count() == 0)
-            {
-                this.mIsActiveButton.Content = "IsActive";
-            }
+        private void OnPropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            Console.WriteLine(e.PropertyName);
         }
 
         #endregion // Methods.

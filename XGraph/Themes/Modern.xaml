@@ -205,8 +205,14 @@
             <MultiDataTrigger>
                 <MultiDataTrigger.Conditions>
                     <Condition Binding="{Binding Path=IsActive}" Value="True" />
+                </MultiDataTrigger.Conditions>
+                <Setter Property="HeaderBackground" Value="{StaticResource NodeView_IsActiveBackground_Brush}" />
+            </MultiDataTrigger>
+
+            <MultiDataTrigger>
+                <MultiDataTrigger.Conditions>
+                    <Condition Binding="{Binding Path=IsActive}" Value="True" />
                     <Condition Binding="{Binding Path=HasInputBreakpoint}" Value="True" />
-                    <Condition Binding="{Binding Path=HasOuputBreakPoint}" Value="False" />
                 </MultiDataTrigger.Conditions>
                 <Setter Property="HeaderBackground" Value="{StaticResource NodeView_IsSuspendedInputBackground_Brush}" />
             </MultiDataTrigger>
@@ -215,18 +221,8 @@
                 <MultiDataTrigger.Conditions>
                     <Condition Binding="{Binding Path=IsActive}" Value="True" />
                     <Condition Binding="{Binding Path=HasOuputBreakPoint}" Value="True" />
-                    <Condition Binding="{Binding Path=HasInputBreakpoint}" Value="False" />
                 </MultiDataTrigger.Conditions>
                 <Setter Property="HeaderBackground" Value="{StaticResource NodeView_IsSuspendedOutputBackground_Brush}" />
-            </MultiDataTrigger>
-
-            <MultiDataTrigger>
-                <MultiDataTrigger.Conditions>
-                    <Condition Binding="{Binding Path=IsActive}" Value="True" />
-                    <Condition Binding="{Binding Path=HasInputBreakpoint}" Value="False" />
-                    <Condition Binding="{Binding Path=HasOuputBreakPoint}" Value="False" />
-                </MultiDataTrigger.Conditions>
-                <Setter Property="HeaderBackground" Value="{StaticResource NodeView_IsActiveBackground_Brush}" />
             </MultiDataTrigger>
         </Style.Triggers>
     </Style>

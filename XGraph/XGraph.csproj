@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\NuGet\InstalledPackages\PropertyChanged.Fody.2.6.0\build\PropertyChanged.Fody.props" Condition="Exists('..\NuGet\InstalledPackages\PropertyChanged.Fody.2.6.0\build\PropertyChanged.Fody.props')" />
+  <Import Project="..\NuGet\InstalledPackages\PropertyChanged.Fody.3.2.10\build\PropertyChanged.Fody.props" Condition="Exists('..\NuGet\InstalledPackages\PropertyChanged.Fody.3.2.10\build\PropertyChanged.Fody.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -26,8 +26,8 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="PropertyChanged, Version=2.6.0.0, Culture=neutral, PublicKeyToken=ee3ee20bcf148ddd, processorArchitecture=MSIL">
-      <HintPath>..\NuGet\InstalledPackages\PropertyChanged.Fody.2.6.0\lib\netstandard1.0\PropertyChanged.dll</HintPath>
+    <Reference Include="PropertyChanged, Version=3.2.10.0, Culture=neutral, PublicKeyToken=ee3ee20bcf148ddd, processorArchitecture=MSIL">
+      <HintPath>..\NuGet\InstalledPackages\PropertyChanged.Fody.3.2.10\lib\net40\PropertyChanged.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
@@ -214,13 +214,13 @@
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('$(SolutionDir)\.nuget\NuGet.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\.nuget\NuGet.targets'))" />
-    <Error Condition="!Exists('..\NuGet\InstalledPackages\Fody.3.3.3\build\Fody.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\NuGet\InstalledPackages\Fody.3.3.3\build\Fody.targets'))" />
-    <Error Condition="!Exists('..\NuGet\InstalledPackages\PropertyChanged.Fody.2.6.0\build\PropertyChanged.Fody.props')" Text="$([System.String]::Format('$(ErrorText)', '..\NuGet\InstalledPackages\PropertyChanged.Fody.2.6.0\build\PropertyChanged.Fody.props'))" />
     <Error Condition="!Exists('..\NuGet\InstalledPackages\NETStandard.Library.2.0.3\build\netstandard2.0\NETStandard.Library.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\NuGet\InstalledPackages\NETStandard.Library.2.0.3\build\netstandard2.0\NETStandard.Library.targets'))" />
+    <Error Condition="!Exists('..\NuGet\InstalledPackages\Fody.6.3.0\build\Fody.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\NuGet\InstalledPackages\Fody.6.3.0\build\Fody.targets'))" />
+    <Error Condition="!Exists('..\NuGet\InstalledPackages\PropertyChanged.Fody.3.2.10\build\PropertyChanged.Fody.props')" Text="$([System.String]::Format('$(ErrorText)', '..\NuGet\InstalledPackages\PropertyChanged.Fody.3.2.10\build\PropertyChanged.Fody.props'))" />
   </Target>
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
-  <Import Project="..\NuGet\InstalledPackages\Fody.3.3.3\build\Fody.targets" Condition="Exists('..\NuGet\InstalledPackages\Fody.3.3.3\build\Fody.targets')" />
   <Import Project="..\NuGet\InstalledPackages\NETStandard.Library.2.0.3\build\netstandard2.0\NETStandard.Library.targets" Condition="Exists('..\NuGet\InstalledPackages\NETStandard.Library.2.0.3\build\netstandard2.0\NETStandard.Library.targets')" />
+  <Import Project="..\NuGet\InstalledPackages\Fody.6.3.0\build\Fody.targets" Condition="Exists('..\NuGet\InstalledPackages\Fody.6.3.0\build\Fody.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

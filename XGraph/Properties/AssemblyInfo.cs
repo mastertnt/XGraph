@@ -50,7 +50,7 @@ using System.Windows.Markup;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("2.1.6.0")]
-[assembly: AssemblyVersion("2.2.3.0")]
-[assembly: AssemblyFileVersion("2.2.3.0")]
+[assembly: AssemblyVersion("2.3.0.0")]
+[assembly: AssemblyFileVersion("2.3.0.0")]
 
 [assembly: XmlnsDefinition("http://schemas.xgraph.com/winfx/2016/xaml", "XGraph.Controls")]

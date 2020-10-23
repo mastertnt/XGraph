@@ -176,18 +176,6 @@ namespace XGraph.ViewModels
         }
 
         /// <summary>
-        /// Notifies a property has been modified.
-        /// </summary>
-        /// <param name="pPropertyName">The property name.</param>
-        protected void NotifyPropertyChanged(string pPropertyName)
-        {
-            if (this.PropertyChanged != null)
-            {
-                this.PropertyChanged(this, new PropertyChangedEventArgs(pPropertyName));
-            }
-        }
-
-        /// <summary>
         /// Fires the request connection creation.
         /// </summary>
         /// <param name="pOutput">The output.</param>
