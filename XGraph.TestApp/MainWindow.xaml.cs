@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -259,15 +260,24 @@ namespace XGraph.TestApp
         /// <param name="pEventArgs"></param>
         private void OnGraphViewSelectionChanged(object pSender, SelectionChangedEventArgs pEventArgs)
         {
-            NodeViewModel lPreviousSelectedItem = this.mPropertyEditor.SelectedObject as NodeViewModel;
+            INotifyPropertyChanged lPreviousSelectedItem = this.mPropertyEditor.SelectedObject as INotifyPropertyChanged;
             if (lPreviousSelectedItem != null)
             {
                 lPreviousSelectedItem.PropertyChanged -= this.OnPropertyChanged;
             }
-            NodeViewModel lSelectedItem = this.GraphView.SelectedViewModels.OfType<NodeViewModel>().FirstOrDefault();
-            this.mPropertyEditor.SelectedObject = lSelectedItem;
-            lSelectedItem.PropertyChanged += this.OnPropertyChanged;
-        }
+            NodeViewModel lNodeViewModel = this.GraphView.SelectedViewModels.OfType<NodeViewModel>().FirstOrDefault();
+            if (lNodeViewModel != null)
+            {
+                this.mPropertyEditor.SelectedObject = lNodeViewModel;
+                lNodeViewModel.PropertyChanged += this.OnPropertyChanged;
+            }
+
+            ConnectionViewModel lConnectionViewModel = this.GraphView.SelectedViewModels.OfType<ConnectionViewModel>().FirstOrDefault();
+            if (lConnectionViewModel != null)
+            {
+                this.mPropertyEditor.SelectedObject = lConnectionViewModel;
+                lConnectionViewModel.PropertyChanged += this.OnPropertyChanged;
+            } }
 
         private void OnPropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {

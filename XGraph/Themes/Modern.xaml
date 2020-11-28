@@ -198,7 +198,7 @@
     <!-- NodeView style. -->
     <Style TargetType="{x:Type controls:NodeView}">
         <Setter Property="Foreground" Value="{StaticResource NodeView_Foreground_Brush}" />
-        <Setter Property="Background" Value="{StaticResource NodeView_Background_Brush}" />
+        <Setter Property="Background" Value="{Binding  Path=Brush}" />
         <Setter Property="Template" Value="{StaticResource NodeViewTemplate}" />
         <Setter Property="FocusVisualStyle" Value="{x:Null}" />
         <Style.Triggers>

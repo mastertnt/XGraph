@@ -18,6 +18,16 @@ namespace XGraph.ViewModels
     /// <!-- NBY -->
     public class NodeViewModel : IGraphItemViewModel, IPositionable, INotifyPropertyChanged
     {
+        #region Fields
+
+        /**
+         * Custom brush to use.
+         */
+        private Brush mBrush;
+
+        #endregion
+
+
         #region Constructors
 
         /// <summary>
@@ -31,6 +41,25 @@ namespace XGraph.ViewModels
         #endregion // Constructors.
 
         #region Properties
+
+        /// <summary>
+        /// Gets or sets the brush used to color the node.
+        /// </summary>
+        public virtual Brush Brush
+        {
+            get
+            {
+                if (this.mBrush != null)
+                {
+                    return this.mBrush;
+                }
+                return Themes.ThemeManager.Instance.FindResource("NodeView_Header_Background_Brush") as SolidColorBrush;
+            }
+            set
+            {
+                this.mBrush = value;
+            }
+        }
 
         /// <summary>
         /// Gets the parent graph.
