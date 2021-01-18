@@ -1,5 +1,6 @@
 ﻿using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Globalization;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using PropertyChanged;
@@ -287,6 +288,19 @@ namespace XGraph.ViewModels
 
         /// <inheritdoc />
         public event PropertyChangedEventHandler PropertyChanged;
+
+        #endregion // Events.
+
+        #region Events
+
+        /// <inheritdoc />
+        protected void NotifyPropertyChanged(string pPropertyName)
+        {
+            if (this.PropertyChanged != null)
+            {
+                this.PropertyChanged(this, new PropertyChangedEventArgs(pPropertyName));
+            }
+        }
 
         #endregion // Events.
     }
